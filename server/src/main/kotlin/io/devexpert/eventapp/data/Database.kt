@@ -1,8 +1,11 @@
 package io.devexpert.eventapp.data
 
+import io.devexpert.eventapp.sampleTalks
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -15,6 +18,13 @@ object DatabaseSingleton {
 
         transaction(database) {
             SchemaUtils.create(Talks, Speakers, SpeakerSocialLinks)
+            runBlocking {
+                if(Talks.selectAll().empty()) {
+                    sampleTalks.forEach {
+                        dao.createTalk(it)
+                    }
+                }
+            }
         }
     }
 }

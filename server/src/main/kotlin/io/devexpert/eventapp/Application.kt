@@ -1,6 +1,7 @@
 package io.devexpert.eventapp
 
 import SERVER_PORT
+import io.devexpert.eventapp.data.DatabaseSingleton
 import io.devexpert.eventapp.plugins.configureRouting
 import io.devexpert.eventapp.plugins.configureSerialization
 import io.ktor.server.application.Application
@@ -13,6 +14,7 @@ fun main() {
 }
 
 fun Application.module() {
+    DatabaseSingleton.init()
     configureSerialization()
     configureRouting()
 }

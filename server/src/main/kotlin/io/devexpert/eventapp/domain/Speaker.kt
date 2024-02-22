@@ -7,5 +7,5 @@ data class Speaker(
     val id: Int,
     val name: String,
     val bio: String,
-    val socialLinks: Map<SocialNetwork, String?> = emptyMap()
+    val socialLinks: Map<SocialNetwork, String> = emptyMap()
 )
