@@ -16,6 +16,7 @@ import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 
@@ -32,39 +33,41 @@ fun Application.module() {
     }
 
     routing {
-        // Create
-        post("/talks") {
-            val talk = call.receive<Talk>()
-            talks.add(talk)
-            call.respond(HttpStatusCode.Created)
-        }
+        route("/talks") {
+            // Create
+            post {
+                val talk = call.receive<Talk>()
+                talks.add(talk)
+                call.respond(HttpStatusCode.Created)
+            }
 
-        // Read
-        get("/talks") {
-            call.respond(talks)
-        }
+            // Read
+            get {
+                call.respond(talks)
+            }
 
-        // Update
-        put("/talks/{id}") {
-            val id = call.parameters["id"]?.toIntOrNull()
-            val updatedTalk = call.receive<Talk>()
-            val existingTalk = talks.firstOrNull { it.id == id }
+            // Update
+            put("/{id}") {
+                val id = call.parameters["id"]?.toIntOrNull()
+                val updatedTalk = call.receive<Talk>()
+                val existingTalk = talks.firstOrNull { it.id == id }
 
-            existingTalk?.let {
-                talks[talks.indexOf(it)] = updatedTalk
-                call.respond(HttpStatusCode.OK)
-            } ?: call.respond(HttpStatusCode.NotFound)
-        }
+                existingTalk?.let {
+                    talks[talks.indexOf(it)] = updatedTalk
+                    call.respond(HttpStatusCode.OK)
+                } ?: call.respond(HttpStatusCode.NotFound)
+            }
 
-        // Delete
-        delete("/talks/{id}") {
-            val id = call.parameters["id"]?.toIntOrNull()
-            val isRemoved = talks.removeIf { it.id == id }
+            // Delete
+            delete("/{id}") {
+                val id = call.parameters["id"]?.toIntOrNull()
+                val isRemoved = talks.removeIf { it.id == id }
 
-            if (isRemoved) {
-                call.respond(HttpStatusCode.NoContent)
-            } else {
-                call.respond(HttpStatusCode.NotFound)
+                if (isRemoved) {
+                    call.respond(HttpStatusCode.NoContent)
+                } else {
+                    call.respond(HttpStatusCode.NotFound)
+                }
             }
         }
     }
