@@ -8,6 +8,7 @@ compose = "1.6.1"
 compose-plugin = "1.6.0-rc02"
 junit = "4.13.2"
 kotlin = "1.9.21"
+kotlinxSerializationJson = "1.6.3"
 ktor = "2.3.8"
 logback = "1.4.14"
 exposed = "0.47.0"
@@ -19,6 +20,7 @@ kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
