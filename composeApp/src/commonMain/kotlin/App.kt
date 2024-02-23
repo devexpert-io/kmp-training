@@ -24,7 +24,7 @@ fun App() {
     MaterialTheme {
         var greeting by remember { mutableStateOf("") }
         LaunchedEffect(Unit) {
-            greeting = Greeting().greet()
+            greeting = Greeting().greet().map { it.title }.joinToString("\n")
         }
 
         var showContent by remember { mutableStateOf(false) }

@@ -30,7 +30,9 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentNegotiation)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
@@ -42,10 +44,6 @@ kotlin {
         jvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
         }
-        jsMain.dependencies {
-            // Ktor client won't be supported on WASM/JS until Ktor 3.0
-        }
-
     }
 }
 
