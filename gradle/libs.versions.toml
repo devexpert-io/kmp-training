@@ -20,6 +20,7 @@ ktor = "3.0.0"
 logback = "1.5.8"
 exposed = "0.55.0"
 h2 = "2.3.232"
+hikaricp = "6.0.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -45,6 +46,8 @@ exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "e
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
+hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

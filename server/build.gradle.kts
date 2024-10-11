@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.exposed.dao)
     implementation(libs.exposed.jdbc)
     implementation(libs.h2)
+    implementation(libs.hikaricp)
 
     testImplementation(libs.kotlin.test.junit)
 }
