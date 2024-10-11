@@ -1,7 +1,8 @@
 package io.devexpert.kmptraining.plugins
 
+import io.devexpert.kmptraining.data.Notes.id
+import io.devexpert.kmptraining.data.dao
 import io.devexpert.kmptraining.domain.Note
-import io.devexpert.kmptraining.domain.mockedNotes
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -14,8 +15,6 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 
-private val notes = mockedNotes.toMutableList()
-
 fun Application.configureRouting() {
     routing {
         route("/notes") {
@@ -27,11 +26,12 @@ fun Application.configureRouting() {
                     return@post
                 }
 
-                notes.add(note)
-                call.respond(HttpStatusCode.Created)
+                val addedNote = dao.addNote(note)
+                call.respond(HttpStatusCode.Created, addedNote)
             }
 
             get {
+                val notes = dao.getAllNotes()
                 call.respond(notes)
             }
 
@@ -45,10 +45,9 @@ fun Application.configureRouting() {
                     )
                 }
 
-                val index = notes.indexOfFirst { it.id == updatedNote.id }
-                if (index != -1) {
-                    notes[index] = updatedNote
-                    call.respond(HttpStatusCode.OK, notes[index])
+                val success = dao.updateNote(updatedNote)
+                if (success) {
+                    call.respond(HttpStatusCode.OK, updatedNote)
                 } else {
                     call.respond(HttpStatusCode.NotFound)
                 }
@@ -59,16 +58,37 @@ fun Application.configureRouting() {
                     val id = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(
                         HttpStatusCode.BadRequest
                     )
-                    val note = notes.find { it.id == id }
+                    val note = dao.getNoteById(id)
                         ?: return@get call.respond(HttpStatusCode.NotFound)
                     call.respond(note)
+                }
+
+                put {
+                    val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(
+                        HttpStatusCode.BadRequest
+                    )
+                    val updatedNote = try {
+                        call.receive<Note>()
+                    } catch (e: Exception) {
+                        return@put call.respond(
+                            HttpStatusCode.BadRequest,
+                            "Invalid request format"
+                        )
+                    }
+
+                    val success = dao.updateNote(updatedNote.copy(id = id))
+                    if (success) {
+                        call.respond(HttpStatusCode.OK, updatedNote.copy(id = id))
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
                 }
 
                 delete {
                     val id = call.parameters["id"]?.toIntOrNull()
                         ?: return@delete call.respond(HttpStatusCode.BadRequest)
 
-                    val removed = notes.removeIf { it.id == id }
+                    val removed = dao.deleteNoteById(id)
                     call.respond(if (removed) HttpStatusCode.NoContent else HttpStatusCode.NotFound)
                 }
             }

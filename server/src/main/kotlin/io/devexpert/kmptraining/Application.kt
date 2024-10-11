@@ -1,5 +1,6 @@
 package io.devexpert.kmptraining
 
+import io.devexpert.kmptraining.data.DatabaseSingleton
 import io.devexpert.kmptraining.plugins.configureRouting
 import io.devexpert.kmptraining.plugins.configureSerialization
 import io.ktor.server.application.Application
@@ -12,6 +13,7 @@ fun main() {
 }
 
 fun Application.module() {
+    DatabaseSingleton.init()
     configureSerialization()
     configureRouting()
 }
