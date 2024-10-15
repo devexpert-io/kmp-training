@@ -1,6 +1,5 @@
 package io.devexpert.kmptraining.plugins
 
-import io.devexpert.kmptraining.data.Notes.id
 import io.devexpert.kmptraining.data.dao
 import io.devexpert.kmptraining.domain.Note
 import io.ktor.http.HttpStatusCode
