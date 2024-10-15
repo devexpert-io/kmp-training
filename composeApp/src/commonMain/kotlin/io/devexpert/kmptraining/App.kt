@@ -26,7 +26,10 @@ fun App() {
                 Text("Click me!")
             }
             AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
+                var greeting by remember { mutableStateOf("") }
+                LaunchedEffect(Unit) {
+                    greeting = Greeting().greet()
+                }
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(painterResource(Res.drawable.compose_multiplatform), null)
                     Text("Compose: $greeting")

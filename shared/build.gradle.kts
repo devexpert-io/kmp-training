@@ -43,6 +43,23 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.client.core)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.ios)
         }
     }
 }
