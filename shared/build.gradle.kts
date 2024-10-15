@@ -44,6 +44,9 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.serialization.kotlin.json)
         }
 
         androidMain.dependencies {

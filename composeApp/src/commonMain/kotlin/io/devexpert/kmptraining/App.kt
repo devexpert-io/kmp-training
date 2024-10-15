@@ -28,7 +28,7 @@ fun App() {
             AnimatedVisibility(showContent) {
                 var greeting by remember { mutableStateOf("") }
                 LaunchedEffect(Unit) {
-                    greeting = Greeting().greet()
+                    greeting = Greeting().greet().joinToString("\n") { it.title }
                 }
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(painterResource(Res.drawable.compose_multiplatform), null)
