@@ -10,13 +10,15 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun Notes(viewModel: NotesViewModel = viewModel()) {
-    val state = viewModel.state
+    val state by viewModel.state.collectAsStateWithLifecycle()
     
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -28,7 +30,7 @@ fun Notes(viewModel: NotesViewModel = viewModel()) {
                 }
                 state.error != null -> {
                     Text(
-                        text = state.error,
+                        text = state.error ?: "",
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }

@@ -1,19 +1,20 @@
 package io.devexpert.kmptraining.ui.screens.notes
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.domain.Note
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class NotesViewModel : ViewModel() {
+
     private val repository = NotesRepository()
 
-    var state by mutableStateOf(UiState())
-        private set
+    private val _state = MutableStateFlow(UiState())
+    val state: StateFlow<UiState> = _state.asStateFlow()
 
     init {
         loadNotes()
@@ -21,12 +22,11 @@ class NotesViewModel : ViewModel() {
 
     private fun loadNotes() {
         viewModelScope.launch {
-            state = state.copy(isLoading = true)
-            try {
-                val notes = repository.getNotes()
-                state = state.copy(notes = notes, isLoading = false)
+            _state.value = UiState(isLoading = true)
+            _state.value = try {
+                UiState(notes = repository.getNotes())
             } catch (e: Exception) {
-                state = state.copy(error = e.message, isLoading = false)
+                UiState(error = e.message)
             }
         }
     }

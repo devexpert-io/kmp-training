@@ -9,4 +9,5 @@ class NotesRepository {
 
     suspend fun getNotes(): List<Note> =
         RemoteClient.instance.get("$serverUrl/notes").body()
+
 }
