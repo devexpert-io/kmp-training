@@ -6,4 +6,8 @@
     <string name="wrong_username">Formato de correo electrónico inválido</string>
     <string name="short_password">La contraseña debe tener al menos 5 caracteres</string>
     <string name="login_successful">¡Inicio de sesión exitoso!</string>
+    <string name="login_username_placeholder">Ingrese su nombre de usuario</string>
+    <string name="login_password_placeholder">Ingrese su contraseña</string>
+    <string name="hide_password">Ocultar contraseña</string>
+    <string name="reveal_password">Mostrar contraseña</string>
 </resources>

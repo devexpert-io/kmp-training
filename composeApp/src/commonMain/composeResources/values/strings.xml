@@ -6,4 +6,8 @@
     <string name="wrong_username">Invalid email format</string>
     <string name="short_password">Password must be at least 5 characters long</string>
     <string name="login_successful">Login Successful!</string>
+    <string name="login_username_placeholder">Enter your username</string>
+    <string name="login_password_placeholder">Enter your password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="reveal_password">Reveal password</string>
 </resources>

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,13 +16,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.login_button
-import kmptraining.composeapp.generated.resources.login_password
-import kmptraining.composeapp.generated.resources.login_username
 import kmptraining.composeapp.generated.resources.login_successful
 import org.jetbrains.compose.resources.stringResource
 
@@ -69,16 +65,14 @@ fun LoginForm(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(
+        UserTextField(
             value = username,
-            onValueChange = { username = it },
-            label = { Text(stringResource(Res.string.login_username)) }
+            onValueChange = { username = it }
         )
-        OutlinedTextField(
+        PassTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(stringResource(Res.string.login_password)) },
-            visualTransformation = PasswordVisualTransformation()
+            onDone = { if (isLoginEnabled) onLoginClick(username, password) }
         )
         Button(
             onClick = { onLoginClick(username, password) },
