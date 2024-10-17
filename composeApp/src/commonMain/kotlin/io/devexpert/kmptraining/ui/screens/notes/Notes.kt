@@ -8,11 +8,18 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
+import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.domain.Note
 
 @Composable
-fun Notes(notes: List<Note>) {
+fun Notes() {
+    val notes by produceState(initialValue = emptyList<Note>()) {
+        value = NotesRepository().getNotes()
+    }
+    
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
