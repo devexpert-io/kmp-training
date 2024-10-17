@@ -23,16 +23,22 @@ fun Login() {
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                OutlinedTextField(value = "user", onValueChange = {})
-                OutlinedTextField(value = "password", onValueChange = {})
-                Button(onClick = { }) {
-                    Text("Login")
-                }
-            }
+            LoginForm()
+        }
+    }
+}
+
+@Composable
+fun LoginForm(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        OutlinedTextField(value = "user", onValueChange = {})
+        OutlinedTextField(value = "password", onValueChange = {})
+        Button(onClick = { }) {
+            Text("Login")
         }
     }
 }
