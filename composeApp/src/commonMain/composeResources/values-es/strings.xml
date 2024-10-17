@@ -3,4 +3,7 @@
     <string name="login_username">Nombre de usuario</string>
     <string name="login_password">Contraseña</string>
     <string name="login_button">Iniciar sesión</string>
+    <string name="wrong_username">Formato de correo electrónico inválido</string>
+    <string name="short_password">La contraseña debe tener al menos 5 caracteres</string>
+    <string name="login_successful">¡Inicio de sesión exitoso!</string>
 </resources>
