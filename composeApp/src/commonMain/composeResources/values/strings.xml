@@ -10,4 +10,7 @@
     <string name="login_password_placeholder">Enter your password</string>
     <string name="hide_password">Hide password</string>
     <string name="reveal_password">Reveal password</string>
+    <string name="more_actions">More actions</string>
+    <string name="clone">Clone</string>
+    <string name="delete">Delete</string>
 </resources>

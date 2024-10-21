@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,9 +45,9 @@ fun Notes(viewModel: NotesViewModel = viewModel()) {
                             if (index > 0) {
                                 HorizontalDivider()
                             }
-                            ListItem(
-                                headlineContent = { Text(text = note.title) },
-                                supportingContent = { Text(text = note.content) }
+                            NoteItem(
+                                note = note,
+                                onAction = { viewModel.onAction(it, note) }
                             )
                         }
                     }
