@@ -13,4 +13,7 @@
     <string name="more_actions">More actions</string>
     <string name="clone">Clone</string>
     <string name="delete">Delete</string>
+    <string name="notes">Notes</string>
+    <string name="switch_to_list_view">Switch to list view</string>
+    <string name="switch_to_grid_view">Switch to grid view</string>
 </resources>

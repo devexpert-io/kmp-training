@@ -13,4 +13,7 @@
     <string name="more_actions">Más acciones</string>
     <string name="clone">Clonar</string>
     <string name="delete">Eliminar</string>
+    <string name="notes">Notas</string>
+    <string name="switch_to_list_view">Cambiar a vista de lista</string>
+    <string name="switch_to_grid_view">Cambiar a vista de cuadrícula</string>
 </resources>
