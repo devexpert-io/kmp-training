@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,23 +22,37 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.login_button
-import kmptraining.composeapp.generated.resources.login_successful
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
+@Serializable
+object LoginScreen
+
 @Composable
-fun Login(viewModel: LoginViewModel = viewModel()) {
+fun Login(
+    viewModel: LoginViewModel = viewModel { LoginViewModel() },
+    onLoggedIn: () -> Unit
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Login(
         state = state,
-        onLoginClick = viewModel::loginClicked
+        onLoginClick = viewModel::loginClicked,
+        onLoggedIn = onLoggedIn
     )
 }
 
 @Composable
 fun Login(
     state: LoginViewModel.UiState,
-    onLoginClick: (String, String) -> Unit
+    onLoginClick: (String, String) -> Unit,
+    onLoggedIn: () -> Unit
 ) {
+    LaunchedEffect(state.loggedIn) {
+        if (state.loggedIn) {
+            onLoggedIn()
+        }
+    }
+
     Scaffold { innerPadding ->
         Box(
             modifier = Modifier
@@ -45,18 +60,11 @@ fun Login(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            if (state.loggedIn) {
-                Text(
-                    text = stringResource(Res.string.login_successful),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.headlineMedium
-                )
-            } else {
-                LoginForm(
-                    onLoginClick = onLoginClick,
-                    errorMessage = state.error?.let { stringResource(it) }
-                )
-            }
+            LoginForm(
+                onLoginClick = onLoginClick,
+                errorMessage = state.error?.let { stringResource(it) }
+            )
+
         }
     }
 }

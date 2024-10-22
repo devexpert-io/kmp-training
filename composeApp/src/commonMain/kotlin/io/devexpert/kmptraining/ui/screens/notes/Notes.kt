@@ -33,7 +33,11 @@ import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.notes
 import kmptraining.composeapp.generated.resources.switch_to_grid_view
 import kmptraining.composeapp.generated.resources.switch_to_list_view
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+
+@Serializable
+object NotesScreen
 
 @Composable
 fun Notes(viewModel: NotesViewModel = viewModel()) {
