@@ -16,4 +16,9 @@
     <string name="notes">Notas</string>
     <string name="switch_to_list_view">Cambiar a vista de lista</string>
     <string name="switch_to_grid_view">Cambiar a vista de cuadrícula</string>
+    <string name="note_title">Título</string>
+    <string name="note_content">Contenido</string>
+    <string name="note_detail">Detalle de la Nota</string>
+    <string name="back">Atrás</string>
+    <string name="save">Guardar</string>
 </resources>

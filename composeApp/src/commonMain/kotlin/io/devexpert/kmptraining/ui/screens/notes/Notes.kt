@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -16,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,11 +40,15 @@ import org.jetbrains.compose.resources.stringResource
 object NotesScreen
 
 @Composable
-fun Notes(viewModel: NotesViewModel = viewModel()) {
+fun Notes(
+    viewModel: NotesViewModel = viewModel(),
+    onNoteClick: (Note) -> Unit
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Notes(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onNoteClick = onNoteClick
     )
 }
 
@@ -52,7 +56,8 @@ fun Notes(viewModel: NotesViewModel = viewModel()) {
 @Composable
 fun Notes(
     state: NotesViewModel.UiState,
-    onAction: (Action, Note) -> Unit
+    onAction: (Action, Note) -> Unit,
+    onNoteClick: (Note) -> Unit
 ) {
     var isGrid by remember { mutableStateOf(false) }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -69,7 +74,7 @@ fun Notes(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { onNoteClick(Note.Empty) }) {
                 Icon(Icons.Default.Add, contentDescription = "Add note")
             }
         }
@@ -95,12 +100,14 @@ fun Notes(
                     NotesGrid(
                         state = state,
                         onAction = onAction,
+                        onNoteClick = onNoteClick,
                         modifier = Modifier.fillMaxSize().padding(innerPadding)
                     )
                 } else {
                     NotesList(
                         state = state,
                         onAction = onAction,
+                        onNoteClick = onNoteClick,
                         modifier = Modifier.fillMaxSize().padding(innerPadding)
                     )
                 }

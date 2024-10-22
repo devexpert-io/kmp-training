@@ -16,4 +16,9 @@
     <string name="notes">Notes</string>
     <string name="switch_to_list_view">Switch to list view</string>
     <string name="switch_to_grid_view">Switch to grid view</string>
+    <string name="note_title">Title</string>
+    <string name="note_content">Content</string>
+    <string name="note_detail">Note Detail</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
 </resources>

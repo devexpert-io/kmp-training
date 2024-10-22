@@ -1,5 +1,6 @@
 package io.devexpert.kmptraining.ui.screens.notes
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
@@ -14,6 +15,7 @@ import io.devexpert.kmptraining.ui.domain.Action
 fun NotesList(
     state: NotesViewModel.UiState,
     onAction: (Action, Note) -> Unit,
+    onNoteClick: (Note) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -26,17 +28,23 @@ fun NotesList(
             }
             NoteListItem(
                 note = note,
-                onAction = { action -> onAction(action, note) }
+                onAction = { action -> onAction(action, note) },
+                onClick = { onNoteClick(note) }
             )
         }
     }
 }
 
 @Composable
-fun NoteListItem(note: Note, onAction: (Action) -> Unit) {
+fun NoteListItem(
+    note: Note,
+    onAction: (Action) -> Unit,
+    onClick: () -> Unit
+) {
     ListItem(
         headlineContent = { Text(text = note.title) },
         supportingContent = { Text(text = note.content) },
-        trailingContent = { MoreActionsIconButton(onAction) }
+        trailingContent = { MoreActionsIconButton(onAction) },
+        modifier = Modifier.clickable(onClick = onClick)
     )
 }

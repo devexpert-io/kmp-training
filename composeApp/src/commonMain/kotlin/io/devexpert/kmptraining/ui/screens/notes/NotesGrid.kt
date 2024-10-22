@@ -24,6 +24,7 @@ import io.devexpert.kmptraining.ui.domain.Action
 fun NotesGrid(
     state: NotesViewModel.UiState,
     onAction: (Action, Note) -> Unit,
+    onNoteClick: (Note) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalStaggeredGrid(
@@ -38,6 +39,7 @@ fun NotesGrid(
             NoteGridItem(
                 note = note,
                 onAction = { action -> onAction(action, note) },
+                onClick = { onNoteClick(note) },
                 modifier = Modifier.padding(4.dp)
             )
         }
@@ -48,11 +50,13 @@ fun NotesGrid(
 fun NoteGridItem(
     note: Note,
     onAction: (Action) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onClick
         ) {
             Column {
                 Column(modifier = Modifier.padding(16.dp)) {
