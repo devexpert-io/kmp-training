@@ -1,0 +1,17 @@
+CREATE TABLE notes (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM notes;
+
+selectById:
+SELECT * FROM notes WHERE id = :id;
+
+insert:
+INSERT INTO notes (id, title, content) VALUES (:id, :title, :content);
+
+deleteAll:
+DELETE FROM notes;
