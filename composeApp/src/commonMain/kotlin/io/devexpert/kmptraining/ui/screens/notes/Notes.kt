@@ -1,13 +1,11 @@
 package io.devexpert.kmptraining.ui.screens.notes
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -22,12 +20,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.devexpert.kmptraining.domain.Note
+import io.devexpert.kmptraining.ui.common.ErrorMessage
+import io.devexpert.kmptraining.ui.common.LoadingIndicator
 import io.devexpert.kmptraining.ui.domain.Action
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.notes
@@ -80,19 +79,13 @@ fun Notes(
         }
     ) { innerPadding ->
         when {
-            state.isLoading -> {
-                Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-            }
+            state.isLoading -> LoadingIndicator(modifier = Modifier.padding(innerPadding))
 
             state.error != null -> {
-                Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                    Text(
-                        text = state.error,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+                ErrorMessage(
+                    error = state.error,
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
 
             else -> {

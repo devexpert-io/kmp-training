@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.devexpert.kmptraining.domain.Note
+import io.devexpert.kmptraining.ui.common.ErrorMessage
+import io.devexpert.kmptraining.ui.common.LoadingIndicator
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.back
 import kmptraining.composeapp.generated.resources.note_content
@@ -38,29 +40,51 @@ data class NoteDetailScreen(val noteId: Int)
 
 @Composable
 fun NoteDetail(viewModel: NoteDetailViewModel, onBack: () -> Unit) {
-
     val state by viewModel.state.collectAsStateWithLifecycle()
+    NoteDetail(
+        state = state,
+        onSave = { viewModel.saveNote(it); onBack() },
+        onBack = onBack
+    )
+}
+
+@Composable
+fun NoteDetail(
+    state: NoteDetailViewModel.UiState,
+    onSave: (Note) -> Unit,
+    onBack: () -> Unit
+) {
     var updatedNote by remember(state.note) { mutableStateOf(state.note ?: Note.Empty) }
 
     Scaffold(
         topBar = {
             DetailTopAppBar(
                 onBack = onBack,
-                onSave = {
-                    viewModel.saveNote(updatedNote)
-                    onBack()
-                }
+                onSave = { onSave(updatedNote) }
             )
         }
     ) { innerPadding ->
-        state.note?.let { note ->
-            NoteDetailContent(
-                note = updatedNote,
-                onUpdate = { updatedNote = it },
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-            )
+        when {
+            state.isLoading -> LoadingIndicator(modifier = Modifier.padding(innerPadding))
+
+            state.error != null -> {
+                ErrorMessage(
+                    error = state.error,
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
+
+            else -> {
+                state.note?.let { note ->
+                    NoteDetailContent(
+                        note = updatedNote,
+                        onUpdate = { updatedNote = it },
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize()
+                    )
+                }
+            }
         }
     }
 }
