@@ -27,7 +27,17 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun Login(viewModel: LoginViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    Login(
+        state = state,
+        onLoginClick = viewModel::loginClicked
+    )
+}
 
+@Composable
+fun Login(
+    state: LoginViewModel.UiState,
+    onLoginClick: (String, String) -> Unit
+) {
     Scaffold { innerPadding ->
         Box(
             modifier = Modifier
@@ -43,7 +53,7 @@ fun Login(viewModel: LoginViewModel = viewModel()) {
                 )
             } else {
                 LoginForm(
-                    onLoginClick = viewModel::loginClicked,
+                    onLoginClick = onLoginClick,
                     errorMessage = state.error?.let { stringResource(it) }
                 )
             }

@@ -12,11 +12,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.devexpert.kmptraining.domain.Note
+import io.devexpert.kmptraining.ui.domain.Action
 
 @Composable
 fun Notes(viewModel: NotesViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    Notes(
+        state = state,
+        onAction = viewModel::onAction
+    )
+}
 
+@Composable
+fun Notes(
+    state: NotesViewModel.UiState,
+    onAction: (Action, Note) -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -28,7 +40,7 @@ fun Notes(viewModel: NotesViewModel = viewModel()) {
 
                 state.error != null -> {
                     Text(
-                        text = state.error ?: "",
+                        text = state.error,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -36,7 +48,7 @@ fun Notes(viewModel: NotesViewModel = viewModel()) {
                 else -> {
                     NotesGrid(
                         state = state,
-                        onAction = viewModel::onAction,
+                        onAction = onAction,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
