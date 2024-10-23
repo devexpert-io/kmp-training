@@ -40,7 +40,7 @@ object NotesScreen
 
 @Composable
 fun Notes(
-    viewModel: NotesViewModel = viewModel(),
+    viewModel: NotesViewModel,
     onNoteClick: (Note) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

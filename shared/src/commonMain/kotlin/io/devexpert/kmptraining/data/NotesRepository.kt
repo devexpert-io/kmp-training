@@ -1,50 +1,40 @@
 package io.devexpert.kmptraining.data
 
 import io.devexpert.kmptraining.domain.Note
-import io.devexpert.kmptraining.domain.serverUrl
-import io.ktor.client.call.body
-import io.ktor.client.request.delete
-import io.ktor.client.request.get
-import io.ktor.client.request.post
-import io.ktor.client.request.put
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 
-class NotesRepository {
-
-    companion object {
-        private val BASE_URL = "$serverUrl/notes"
+class NotesRepository(
+    private val localDataSource: NotesLocalDataSource,
+    private val remoteDataSource: NotesRemoteDataSource,
+) {
+    val notes: Flow<List<Note>> = localDataSource.getAllNotes().onEach { notes ->
+        if (notes.isEmpty()) {
+            refreshCache()
+        }
     }
 
-    suspend fun getNotes(): List<Note> =
-        RemoteClient.instance.get(BASE_URL).body()
+    private suspend fun refreshCache() {
+        val remoteNotes = remoteDataSource.getNotes()
+        localDataSource.deleteAllNotes()
+        remoteNotes.forEach(localDataSource::insertNote)
+    }
 
-    suspend fun getNote(noteId: Int): Note =
-        RemoteClient.instance.get("$BASE_URL/$noteId").body()
+    fun getNote(noteId: Int): Flow<Note?> = localDataSource.getNoteById(noteId)
 
-    suspend fun cloneNote(note: Note): Note {
+    suspend fun cloneNote(note: Note) {
         val clonedNote = note.copy(id = 0, title = "Copy of ${note.title}")
-
-        return RemoteClient.instance.post(BASE_URL) {
-            contentType(ContentType.Application.Json)
-            setBody(clonedNote)
-        }.body<Note>()
+        saveNote(clonedNote)
     }
 
     suspend fun deleteNote(note: Note) {
-        RemoteClient.instance.delete("$BASE_URL/${note.id}")
+        remoteDataSource.deleteNote(note)
+        refreshCache()
     }
 
-    suspend fun saveNote(note: Note): Note = if (note.id <= 0) {
-        RemoteClient.instance.post(BASE_URL) {
-            contentType(ContentType.Application.Json)
-            setBody(note)
-        }.body<Note>()
-    } else {
-        RemoteClient.instance.put("$BASE_URL/${note.id}") {
-            contentType(ContentType.Application.Json)
-            setBody(note)
-        }.body<Note>()
+    suspend fun saveNote(note: Note): Note {
+        val updatedNote = remoteDataSource.saveNote(note)
+        refreshCache()
+        return updatedNote
     }
 }

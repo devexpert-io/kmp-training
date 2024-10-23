@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.domain.Note
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class NoteDetailViewModel(
@@ -13,23 +16,18 @@ class NoteDetailViewModel(
     private val repository: NotesRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(UiState())
-    val state: StateFlow<UiState> = _state
-
-    init {
-        if (noteId == Note.Empty.id) {
-            _state.value = UiState(note = Note.Empty)
-        } else {
-            loadNote(noteId)
-        }
-    }
-
-    private fun loadNote(noteId: Int) {
-        viewModelScope.launch {
-            val note = repository.getNote(noteId)
-            _state.value = UiState(note = note)
-        }
-    }
+    val state = if (noteId == Note.Empty.id) {
+        flowOf(UiState(note = Note.Empty))
+    } else {
+        repository
+            .getNote(noteId)
+            .map { UiState(note = it) }
+            .catch { e -> emit(UiState(error = e.message)) }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = UiState(isLoading = true)
+    )
 
     fun saveNote(note: Note) {
         viewModelScope.launch {
