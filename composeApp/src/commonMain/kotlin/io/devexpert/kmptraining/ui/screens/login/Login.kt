@@ -1,17 +1,6 @@
 package io.devexpert.kmptraining.ui.screens.login
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -72,23 +61,9 @@ fun Login(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            val infiniteTransition = rememberInfiniteTransition(label = "bgColorTransition")
-            val bgColor by infiniteTransition.animateColor(
-                initialValue = MaterialTheme.colorScheme.surface,
-                targetValue = MaterialTheme.colorScheme.surfaceVariant,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(1000, easing = LinearEasing),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "bgColor"
-            )
-
             LoginForm(
                 onLoginClick = onLoginClick,
                 errorMessage = state.error?.let { stringResource(it) },
-                modifier = Modifier
-                    .background(bgColor)
-                    .padding(16.dp),
             )
 
         }
