@@ -11,7 +11,36 @@ fun KmpTrainingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) darkColorScheme() else lightColorScheme()
+    val darkColorScheme = darkColorScheme(
+        primary = primaryDark,
+        onPrimary = onPrimaryDark,
+        secondary = secondaryDark,
+        onSecondary = onSecondaryDark,
+        tertiary = tertiaryDark,
+        onTertiary = onTertiaryDark,
+        primaryContainer = primaryContainerDark,
+        onPrimaryContainer = onPrimaryContainerDark,
+        secondaryContainer = secondaryContainerDark,
+        onSecondaryContainer = onSecondaryContainerDark,
+        tertiaryContainer = tertiaryContainerDark,
+        onTertiaryContainer = onTertiaryContainerDark,
+    )
+    val lightColorScheme = lightColorScheme(
+        primary = primaryLight,
+        onPrimary = onPrimaryLight,
+        secondary = secondaryLight,
+        onSecondary = onSecondaryLight,
+        tertiary = tertiaryLight,
+        onTertiary = onTertiaryLight,
+        primaryContainer = primaryContainerLight,
+        onPrimaryContainer = onPrimaryContainerLight,
+        secondaryContainer = secondaryContainerLight,
+        onSecondaryContainer = onSecondaryContainerLight,
+        tertiaryContainer = tertiaryContainerLight,
+        onTertiaryContainer = onTertiaryContainerLight,
+    )
+
+    val colorScheme = if (darkTheme) darkColorScheme else lightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,

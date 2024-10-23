@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,13 +57,18 @@ fun NoteGridItem(
     Box(modifier = modifier) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            onClick = onClick
+            onClick = onClick,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+            )
         ) {
             Column {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = note.title,
                         fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .padding(bottom = 8.dp)
                             .fillMaxWidth()
