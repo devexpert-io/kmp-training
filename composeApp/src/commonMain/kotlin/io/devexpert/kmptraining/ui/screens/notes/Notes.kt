@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,7 +49,8 @@ fun Notes(
     Notes(
         state = state,
         onAction = viewModel::onAction,
-        onNoteClick = onNoteClick
+        onNoteClick = onNoteClick,
+        onMessageRemoved = viewModel::messageShown
     )
 }
 
@@ -57,11 +59,18 @@ fun Notes(
 fun Notes(
     state: NotesViewModel.UiState,
     onAction: (Action, Note) -> Unit,
-    onNoteClick: (Note) -> Unit
+    onNoteClick: (Note) -> Unit,
+    onMessageRemoved: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    snackbarHostState.showSnackbar("I'm here!")
+    val message = state.message?.let { stringResource(it) }
+    LaunchedEffect(state.message) {
+        message?.let {
+            snackbarHostState.showSnackbar(it)
+            onMessageRemoved()
+        }
+    }
 
     var isGrid by remember { mutableStateOf(false) }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
