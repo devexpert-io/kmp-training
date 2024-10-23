@@ -1,6 +1,5 @@
 package io.devexpert.kmptraining
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,7 +34,7 @@ fun App(driverFactory: DriverFactory) {
                 remoteDataSource = NotesRemoteDataSource()
             )
         }
-        NavHost(navController = navController, startDestination = NotesScreen) {
+        NavHost(navController = navController, startDestination = LoginScreen) {
 
             composable<LoginScreen> {
                 Login(onLoggedIn = {

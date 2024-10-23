@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.devexpert.kmptraining.ui.common.StyledButton
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.login_button
 import kotlinx.serialization.Serializable
@@ -93,7 +94,7 @@ fun LoginForm(
             onValueChange = { password = it },
             onDone = { if (isLoginEnabled) onLoginClick(username, password) }
         )
-        Button(
+        StyledButton(
             onClick = { onLoginClick(username, password) },
             enabled = isLoginEnabled
         ) {
