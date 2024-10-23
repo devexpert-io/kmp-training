@@ -21,4 +21,6 @@
     <string name="note_detail">Detalle de la Nota</string>
     <string name="back">Atrás</string>
     <string name="save">Guardar</string>
+    <string name="note_cloned">Nota clonada exitosamente</string>
+    <string name="note_deleted">Nota eliminada exitosamente</string>
 </resources>

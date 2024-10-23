@@ -5,16 +5,26 @@ import androidx.lifecycle.viewModelScope
 import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.domain.Note
 import io.devexpert.kmptraining.ui.domain.Action
+import kmptraining.composeapp.generated.resources.Res
+import kmptraining.composeapp.generated.resources.note_cloned
+import kmptraining.composeapp.generated.resources.note_deleted
+import kmptraining.composeapp.generated.resources.notes
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
 
+    private val message = MutableStateFlow<StringResource?>(null)
+
     val state = repository.notes
         .map { notes -> UiState(notes = notes) }
+        .combine(message) { state, message -> state.copy(message = message) }
         .catch { e -> emit(UiState(error = e.message)) }
         .stateIn(
             scope = viewModelScope,
@@ -25,15 +35,26 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     fun onAction(action: Action, note: Note) {
         viewModelScope.launch {
             when (action) {
-                Action.CLONE -> repository.cloneNote(note)
-                Action.DELETE -> repository.deleteNote(note)
+                Action.CLONE -> {
+                    repository.cloneNote(note)
+                    message.value = Res.string.note_cloned
+                }
+                Action.DELETE -> {
+                    repository.deleteNote(note)
+                    message.value = Res.string.note_deleted
+                }
             }
         }
+    }
+
+    fun messageShown() {
+        message.value = null
     }
 
     data class UiState(
         val notes: List<Note> = emptyList(),
         val isLoading: Boolean = false,
-        val error: String? = null
+        val error: String? = null,
+        val message: StringResource? = null
     )
 }

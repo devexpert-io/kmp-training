@@ -21,4 +21,6 @@
     <string name="note_detail">Note Detail</string>
     <string name="back">Back</string>
     <string name="save">Save</string>
+    <string name="note_cloned">Note cloned successfully</string>
+    <string name="note_deleted">Note deleted successfully</string>
 </resources>
