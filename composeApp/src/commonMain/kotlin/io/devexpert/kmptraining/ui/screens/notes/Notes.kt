@@ -11,6 +11,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -23,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.devexpert.kmptraining.domain.Note
 import io.devexpert.kmptraining.ui.common.ErrorMessage
 import io.devexpert.kmptraining.ui.common.LoadingIndicator
@@ -58,6 +59,10 @@ fun Notes(
     onAction: (Action, Note) -> Unit,
     onNoteClick: (Note) -> Unit
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    snackbarHostState.showSnackbar("I'm here!")
+
     var isGrid by remember { mutableStateOf(false) }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -76,7 +81,8 @@ fun Notes(
             FloatingActionButton(onClick = { onNoteClick(Note.Empty) }) {
                 Icon(Icons.Default.Add, contentDescription = "Add note")
             }
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         when {
             state.isLoading -> LoadingIndicator(modifier = Modifier.padding(innerPadding))
