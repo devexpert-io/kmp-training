@@ -1,5 +1,6 @@
 package io.devexpert.kmptraining.ui.screens.notes
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -104,20 +105,22 @@ fun Notes(
             }
 
             else -> {
-                if (isGrid) {
-                    NotesGrid(
-                        state = state,
-                        onAction = onAction,
-                        onNoteClick = onNoteClick,
-                        modifier = Modifier.fillMaxSize().padding(innerPadding)
-                    )
-                } else {
-                    NotesList(
-                        state = state,
-                        onAction = onAction,
-                        onNoteClick = onNoteClick,
-                        modifier = Modifier.fillMaxSize().padding(innerPadding)
-                    )
+                Crossfade(targetState = isGrid) { isGrid ->
+                    if (isGrid) {
+                        NotesGrid(
+                            state = state,
+                            onAction = onAction,
+                            onNoteClick = onNoteClick,
+                            modifier = Modifier.fillMaxSize().padding(innerPadding)
+                        )
+                    } else {
+                        NotesList(
+                            state = state,
+                            onAction = onAction,
+                            onNoteClick = onNoteClick,
+                            modifier = Modifier.fillMaxSize().padding(innerPadding)
+                        )
+                    }
                 }
             }
         }
