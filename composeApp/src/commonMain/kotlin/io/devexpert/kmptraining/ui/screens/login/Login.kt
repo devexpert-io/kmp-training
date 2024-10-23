@@ -2,7 +2,13 @@ package io.devexpert.kmptraining.ui.screens.login
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -66,26 +72,22 @@ fun Login(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            val transition = updateTransition(
-                targetState = state.error != null,
-                label = "bgTransition"
+            val infiniteTransition = rememberInfiniteTransition(label = "bgColorTransition")
+            val bgColor by infiniteTransition.animateColor(
+                initialValue = MaterialTheme.colorScheme.surface,
+                targetValue = MaterialTheme.colorScheme.surfaceVariant,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(1000, easing = LinearEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "bgColor"
             )
-            val borderWidth by transition.animateDp(label = "borderWidth") {
-                if (it) 8.dp else (-1).dp
-            }
-            val bgColor by transition.animateColor(label = "borderColor") {
-                if (it)
-                    MaterialTheme.colorScheme.errorContainer
-                else
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-            }
 
             LoginForm(
                 onLoginClick = onLoginClick,
                 errorMessage = state.error?.let { stringResource(it) },
                 modifier = Modifier
                     .background(bgColor)
-                    .border(width = borderWidth, color = MaterialTheme.colorScheme.error)
                     .padding(16.dp),
             )
 
