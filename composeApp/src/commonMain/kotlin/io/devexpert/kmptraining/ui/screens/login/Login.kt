@@ -1,6 +1,11 @@
 package io.devexpert.kmptraining.ui.screens.login
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,9 +66,27 @@ fun Login(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
+            val transition = updateTransition(
+                targetState = state.error != null,
+                label = "bgTransition"
+            )
+            val borderWidth by transition.animateDp(label = "borderWidth") {
+                if (it) 8.dp else (-1).dp
+            }
+            val bgColor by transition.animateColor(label = "borderColor") {
+                if (it)
+                    MaterialTheme.colorScheme.errorContainer
+                else
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+            }
+
             LoginForm(
                 onLoginClick = onLoginClick,
-                errorMessage = state.error?.let { stringResource(it) }
+                errorMessage = state.error?.let { stringResource(it) },
+                modifier = Modifier
+                    .background(bgColor)
+                    .border(width = borderWidth, color = MaterialTheme.colorScheme.error)
+                    .padding(16.dp),
             )
 
         }
@@ -72,9 +95,9 @@ fun Login(
 
 @Composable
 fun LoginForm(
-    modifier: Modifier = Modifier,
     onLoginClick: (String, String) -> Unit,
-    errorMessage: String?
+    errorMessage: String?,
+    modifier: Modifier = Modifier
 ) {
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
