@@ -21,12 +21,13 @@ import io.devexpert.kmptraining.ui.screens.notedetail.NoteDetailViewModel
 import io.devexpert.kmptraining.ui.screens.notes.Notes
 import io.devexpert.kmptraining.ui.screens.notes.NotesScreen
 import io.devexpert.kmptraining.ui.screens.notes.NotesViewModel
+import io.devexpert.kmptraining.ui.theme.KmpTrainingTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App(driverFactory: DriverFactory) {
-    MaterialTheme {
+    KmpTrainingTheme {
         val navController = rememberNavController()
         val notesRepository = remember {
             NotesRepository(
