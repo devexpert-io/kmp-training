@@ -19,19 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.devexpert.kmptraining.ui.common.StyledButton
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.login_button
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
 object LoginScreen
 
 @Composable
 fun Login(
-    viewModel: LoginViewModel = viewModel { LoginViewModel() },
+    viewModel: LoginViewModel = koinViewModel(),
     onLoggedIn: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

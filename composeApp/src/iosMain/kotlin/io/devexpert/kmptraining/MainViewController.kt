@@ -1,6 +1,9 @@
 package io.devexpert.kmptraining
 
 import androidx.compose.ui.window.ComposeUIViewController
-import io.devexpert.kmptraining.data.DriverFactory
+import platform.UIKit.UIViewController
 
-fun MainViewController() = ComposeUIViewController { App(DriverFactory()) }
+fun MainViewController(): UIViewController {
+    initKoin()
+    return ComposeUIViewController { App() }
+}

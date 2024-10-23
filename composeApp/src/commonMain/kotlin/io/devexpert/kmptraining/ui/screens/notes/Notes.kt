@@ -37,13 +37,14 @@ import kmptraining.composeapp.generated.resources.switch_to_grid_view
 import kmptraining.composeapp.generated.resources.switch_to_list_view
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
 object NotesScreen
 
 @Composable
 fun Notes(
-    viewModel: NotesViewModel,
+    viewModel: NotesViewModel = koinViewModel(),
     onNoteClick: (Note) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
