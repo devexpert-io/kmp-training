@@ -9,20 +9,27 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class NotesLocalDataSource(
+interface NotesLocalDataSource {
+    fun getAllNotes(): Flow<List<Note>>
+    fun getNoteById(id: Int): Flow<Note?>
+    fun insertNote(note: Note)
+    fun deleteAllNotes()
+}
+
+class NotesLocalDataSourceImpl(
     private val queries: NotesQueries,
     private val dispatcher: CoroutineDispatcher,
-) {
-    fun getAllNotes(): Flow<List<Note>> = queries.selectAll().asFlow().mapToList(dispatcher)
+) : NotesLocalDataSource {
+    override fun getAllNotes(): Flow<List<Note>> = queries.selectAll().asFlow().mapToList(dispatcher)
         .map { notes -> notes.map { it.toNote() } }
 
-    fun getNoteById(id: Int): Flow<Note?> =
+    override fun getNoteById(id: Int): Flow<Note?> =
         queries.selectById(id.toLong()).asFlow().mapToList(dispatcher)
             .map { it.firstOrNull()?.toNote() }
 
-    fun insertNote(note: Note): Unit = queries.insert(note.id.toLong(), note.title, note.content)
+    override fun insertNote(note: Note): Unit = queries.insert(note.id.toLong(), note.title, note.content)
 
-    fun deleteAllNotes(): Unit = queries.deleteAll()
+    override fun deleteAllNotes(): Unit = queries.deleteAll()
 }
 
 private fun Notes.toNote() = Note(
