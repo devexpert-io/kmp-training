@@ -74,6 +74,10 @@ kotlin {
             implementation(libs.sqldelight.native.driver)
             implementation(libs.kstore.file)
         }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
     }
 
     compilerOptions {
