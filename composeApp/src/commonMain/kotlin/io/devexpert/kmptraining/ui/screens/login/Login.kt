@@ -1,24 +1,18 @@
 package io.devexpert.kmptraining.ui.screens.login
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.devexpert.kmptraining.ui.common.LoadingIndicator
 import io.devexpert.kmptraining.ui.common.StyledButton
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.login_button
@@ -45,9 +39,16 @@ fun Login(
 @Composable
 fun Login(
     state: LoginViewModel.UiState,
-    onLoginClick: (String, String) -> Unit,
+    onLoginClick: () -> Unit,
     onLoggedIn: () -> Unit
 ) {
+    val uriHandler = LocalUriHandler.current
+    LaunchedEffect(state.loginUrl) {
+        if (state.loginUrl != null) {
+            uriHandler.openUri(state.loginUrl)
+        }
+    }
+
     LaunchedEffect(state.loggedIn) {
         if (state.loggedIn) {
             onLoggedIn()
@@ -61,55 +62,19 @@ fun Login(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            LoginForm(
-                onLoginClick = onLoginClick,
-                errorMessage = state.error?.let { stringResource(it) },
-            )
+            when {
+                state.loading -> LoadingIndicator()
+                state.error != null -> Text(stringResource(state.error))
+                else -> LoginButton(onLoginClick)
+            }
 
         }
     }
 }
 
 @Composable
-fun LoginForm(
-    onLoginClick: (String, String) -> Unit,
-    errorMessage: String?,
-    modifier: Modifier = Modifier
-) {
-    var username by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    val isLoginEnabled = username.isNotBlank() && password.isNotBlank()
-
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        UserTextField(
-            value = username,
-            onValueChange = { username = it }
-        )
-        PassTextField(
-            value = password,
-            onValueChange = { password = it },
-            onDone = { if (isLoginEnabled) onLoginClick(username, password) }
-        )
-
-        AnimatedVisibility(isLoginEnabled) {
-            StyledButton(
-                onClick = { onLoginClick(username, password) }
-            ) {
-                Text(stringResource(Res.string.login_button))
-            }
-        }
-
-        AnimatedVisibility(errorMessage != null) {
-            if (errorMessage != null) {
-                Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
+fun LoginButton(onLoginClick: () -> Unit) {
+    StyledButton(onClick = onLoginClick) {
+        Text(stringResource(Res.string.login_button))
     }
 }
