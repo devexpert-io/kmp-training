@@ -2,15 +2,14 @@ package io.devexpert.kmptraining.ui.screens.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.data.AuthRepository
+import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.domain.Note
 import io.devexpert.kmptraining.domain.User
 import io.devexpert.kmptraining.ui.domain.Action
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.note_cloned
 import kmptraining.composeapp.generated.resources.note_deleted
-import kmptraining.composeapp.generated.resources.notes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -22,7 +21,7 @@ import org.jetbrains.compose.resources.StringResource
 
 class NotesViewModel(
     private val notesRepository: NotesRepository,
-    private val authRepository: AuthRepository
+    authRepository: AuthRepository
 ) : ViewModel() {
 
     private val message = MutableStateFlow<StringResource?>(null)

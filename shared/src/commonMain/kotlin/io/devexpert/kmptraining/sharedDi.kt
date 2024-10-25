@@ -3,7 +3,9 @@ package io.devexpert.kmptraining
 import io.devexpert.kmptraining.data.AuthRepository
 import io.devexpert.kmptraining.data.KStoreUserStorage
 import io.devexpert.kmptraining.data.NotesLocalDataSource
+import io.devexpert.kmptraining.data.NotesLocalDataSourceImpl
 import io.devexpert.kmptraining.data.NotesRemoteDataSource
+import io.devexpert.kmptraining.data.NotesRemoteDataSourceImpl
 import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.data.UserStorage
 import io.devexpert.kmptraining.sqldelight.Database
@@ -30,8 +32,8 @@ internal enum class Named {
 }
 
 val sharedModule: Module = module {
-    single { NotesRemoteDataSource(get(), get(named(Named.SERVER_URL))) }
-    singleOf(::NotesLocalDataSource)
+    single<NotesRemoteDataSource> { NotesRemoteDataSourceImpl(get(), get(named(Named.SERVER_URL))) }
+    singleOf(::NotesLocalDataSourceImpl) bind NotesLocalDataSource::class
     singleOf(::NotesRepository)
     single<CoroutineDispatcher> { Dispatchers.IO }
     single { Database(get()).notesQueries }
