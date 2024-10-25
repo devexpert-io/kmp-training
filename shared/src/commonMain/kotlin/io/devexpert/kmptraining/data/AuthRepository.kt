@@ -13,15 +13,11 @@ class AuthRepository(
     }
 
     suspend fun handleAuthCode() {
-        try {
-            val token = oAuthServer.authCode.first()
-            tokenStorage.saveToken(token)
-        } finally {
-            stop()
-        }
+        val token = oAuthServer.authCode.first()
+        tokenStorage.saveToken(token)
     }
 
-    suspend fun stop() {
+    fun stop() {
         oAuthServer.stop()
     }
 }

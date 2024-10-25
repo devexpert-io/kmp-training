@@ -49,6 +49,8 @@ kotlin {
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines.extensions)
             implementation(libs.koin.core)
+            implementation(libs.ktor.server.core)
+            implementation(libs.ktor.server.cio)
         }
 
         androidMain.dependencies {
@@ -59,8 +61,6 @@ kotlin {
         jvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.sqldelight.sqlite.driver)
-            implementation(libs.ktor.server.core)
-            implementation(libs.ktor.server.netty)
         }
 
         /*wasmJsMain.dependencies {

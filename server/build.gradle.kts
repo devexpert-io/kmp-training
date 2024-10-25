@@ -16,8 +16,8 @@ application {
 dependencies {
     implementation(projects.shared)
     implementation(libs.logback)
-    implementation(libs.ktor.server.core)
-    implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.core.jvm)
+    implementation(libs.ktor.server.netty.jvm)
     implementation(libs.ktor.server.contentNegotiation)
     implementation(libs.ktor.serialization.kotlin.json)
     implementation(libs.ktor.server.cors)

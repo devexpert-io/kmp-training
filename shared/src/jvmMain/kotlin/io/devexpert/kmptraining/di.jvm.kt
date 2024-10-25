@@ -2,12 +2,9 @@ package io.devexpert.kmptraining
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import io.devexpert.kmptraining.data.OAuthServer
 import io.devexpert.kmptraining.sqldelight.Database
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
-import org.koin.dsl.bind
 import org.koin.dsl.module
 import java.io.File
 
@@ -20,5 +17,4 @@ actual val nativeModule: Module = module {
         }
     }
     single(named(Named.SERVER_URL)) { "http://0.0.0.0:8080" }
-    singleOf(::DesktopOAuthServer) bind OAuthServer::class
 }
