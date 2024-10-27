@@ -1,6 +1,7 @@
 package io.devexpert.kmptraining
 
 import io.devexpert.kmptraining.data.AuthRepository
+import io.devexpert.kmptraining.data.KtorOAuthServer
 import io.devexpert.kmptraining.data.KStoreUserInfoStorage
 import io.devexpert.kmptraining.data.NotesLocalDataSource
 import io.devexpert.kmptraining.data.NotesLocalDataSourceImpl
@@ -44,7 +45,7 @@ val sharedModule: Module = module {
     single { buildHttpClient() }
     single { AuthRepository(get(named(Named.SERVER_URL)), get(), get()) }
     singleOf(::KStoreUserInfoStorage) bind UserInfoStorage::class
-    singleOf(::OAuthServer)
+    singleOf(::KtorOAuthServer) bind OAuthServer::class
     single<ApplicationEngineFactory<*, *>> { CIO }
 }
 

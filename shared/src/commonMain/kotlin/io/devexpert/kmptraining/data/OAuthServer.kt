@@ -12,11 +12,17 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-class OAuthServer(
+interface OAuthServer {
+    val userInfo: Flow<UserInfo>
+    fun start()
+    fun stop()
+}
+
+class KtorOAuthServer(
     applicationEngineFactory: ApplicationEngineFactory<*, *>
-) {
+) : OAuthServer {
     private val _userInfo = Channel<UserInfo>()
-    val userInfo: Flow<UserInfo> = _userInfo.receiveAsFlow()
+    override val userInfo: Flow<UserInfo> = _userInfo.receiveAsFlow()
 
     private val server = embeddedServer(
         factory = applicationEngineFactory,
@@ -28,7 +34,7 @@ class OAuthServer(
                 val token = call.parameters["token"]
                 val name = call.parameters["name"]
                 val picture = call.parameters["picture"]
-                
+
                 if (token != null && name != null && picture != null) {
                     _userInfo.send(UserInfo(token, name, picture))
                     call.respondText("Authentication successful. You can close this window.")
@@ -40,11 +46,11 @@ class OAuthServer(
         }
     }
 
-    fun start() {
+    override fun start() {
         server.start()
     }
 
-    fun stop() {
+    override fun stop() {
         server.stop(1000, 2000)
         _userInfo.close()
     }
