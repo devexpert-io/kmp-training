@@ -1,5 +1,7 @@
 package io.devexpert.kmptraining
 
+import io.devexpert.kmptraining.data.AuthRemoteDataSource
+import io.devexpert.kmptraining.data.AuthRemoteDataSourceImpl
 import io.devexpert.kmptraining.data.AuthRepository
 import io.devexpert.kmptraining.data.KStoreUserStorage
 import io.devexpert.kmptraining.data.NotesLocalDataSource
@@ -38,7 +40,8 @@ val sharedModule: Module = module {
     single<CoroutineDispatcher> { Dispatchers.IO }
     single { Database(get()).notesQueries }
     single { buildHttpClient(get()) }
-    single { AuthRepository(get(named(Named.SERVER_URL)), get(), get()) }
+    singleOf(::AuthRepository)
+    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get(named(Named.SERVER_URL)), get()) }
     singleOf(::KStoreUserStorage) bind UserStorage::class
 }
 
