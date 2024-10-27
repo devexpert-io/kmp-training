@@ -11,7 +11,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import io.devexpert.kmptraining.domain.Note
-import io.devexpert.kmptraining.ui.common.LOADING_INDICATOR_TEST_TAG
+import io.devexpert.kmptraining.ui.common.LOADING_INDICATOR_TAG
 import io.devexpert.kmptraining.ui.domain.Action
 import io.devexpert.kmptraining.ui.screens.notes.Notes
 import io.devexpert.kmptraining.ui.screens.notes.NotesViewModel
@@ -52,7 +52,7 @@ class NotesTest {
             )
         }
 
-        onNodeWithTag(LOADING_INDICATOR_TEST_TAG).assertIsDisplayed()
+        onNodeWithTag(LOADING_INDICATOR_TAG).assertIsDisplayed()
     }
 
     @Test
