@@ -1,4 +1,4 @@
-package io.devexpert.kmptraining.ui.notes
+package io.devexpert.kmptraining.ui.screens.notes
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
@@ -13,8 +13,6 @@ import androidx.compose.ui.test.runComposeUiTest
 import io.devexpert.kmptraining.domain.Note
 import io.devexpert.kmptraining.ui.common.LOADING_INDICATOR_TAG
 import io.devexpert.kmptraining.ui.domain.Action
-import io.devexpert.kmptraining.ui.screens.notes.Notes
-import io.devexpert.kmptraining.ui.screens.notes.NotesViewModel
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.clone
 import kmptraining.composeapp.generated.resources.delete
