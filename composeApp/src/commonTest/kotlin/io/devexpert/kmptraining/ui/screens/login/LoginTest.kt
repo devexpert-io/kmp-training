@@ -1,4 +1,4 @@
-package io.devexpert.kmptraining.ui.login
+package io.devexpert.kmptraining.ui.screens.login
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
