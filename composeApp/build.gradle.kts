@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import java.util.Properties
 
@@ -34,16 +37,16 @@ kotlin {
         }
         binaries.executable()
     }*/
-    
+
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
+        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
-    
+
     jvm("desktop")
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -54,10 +57,10 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -93,6 +96,11 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.ios)
         }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            @OptIn(ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
     }
 }
 
@@ -106,6 +114,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -130,6 +139,8 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
 
 compose.desktop {
