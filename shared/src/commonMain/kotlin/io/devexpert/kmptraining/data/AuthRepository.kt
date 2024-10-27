@@ -7,6 +7,10 @@ class AuthRepository(
     private val oAuthServer: OAuthServer,
     private val tokenStorage: TokenStorage,
 ) {
+    suspend fun shouldInitiateOAuth(): Boolean {
+        return tokenStorage.getToken().isNullOrEmpty()
+    }
+
     fun initiateOAuth(): String {
         oAuthServer.start()
         return "$serverUrl/login"

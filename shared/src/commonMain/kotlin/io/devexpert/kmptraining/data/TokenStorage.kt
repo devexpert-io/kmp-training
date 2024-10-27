@@ -1,23 +1,27 @@
 package io.devexpert.kmptraining.data
 
+import io.github.xxfast.kstore.KStore
+
 interface TokenStorage {
-    fun saveToken(token: String)
-    fun getToken(): String?
-    fun clearToken()
+    suspend fun saveToken(token: String)
+    suspend fun getToken(): String?
+    suspend fun clearToken()
 }
 
-class InMemoryTokenStorage : TokenStorage {
-    private var token: String? = null
+typealias Token = String
 
-    override fun saveToken(token: String) {
-        this.token = token
+class KStoreTokenStorage(
+    private val store: KStore<Token>
+) : TokenStorage {
+    override suspend fun saveToken(token: Token) {
+        store.set(token)
     }
 
-    override fun getToken(): String? {
-        return token
+    override suspend fun getToken(): Token? {
+        return store.get()
     }
 
-    override fun clearToken() {
-        token = null
+    override suspend fun clearToken() {
+        store.delete()
     }
 }

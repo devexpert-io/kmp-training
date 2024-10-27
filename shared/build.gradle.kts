@@ -51,16 +51,20 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.cio)
+            implementation(libs.kstore)
         }
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.sqldelight.android.driver)
+            implementation(libs.kstore.file)
         }
 
         jvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.sqldelight.sqlite.driver)
+            implementation(libs.harawata.appdirs)
+            implementation(libs.kstore.file)
         }
 
         /*wasmJsMain.dependencies {
@@ -70,6 +74,7 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.ios)
             implementation(libs.sqldelight.native.driver)
+            implementation(libs.kstore.file)
         }
     }
 

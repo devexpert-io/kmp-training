@@ -20,11 +20,13 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
     fun loginClicked() {
         viewModelScope.launch {
             try {
-                _state.value = UiState(loading = true)
-                val loginUrl = authRepository.initiateOAuth()
-                _state.update { it.copy(loginUrl = loginUrl) }
+                if (authRepository.shouldInitiateOAuth()) {
+                    _state.value = UiState(loading = true)
+                    val loginUrl = authRepository.initiateOAuth()
+                    _state.update { it.copy(loginUrl = loginUrl) }
 
-                authRepository.handleAuthCode()
+                    authRepository.handleAuthCode()
+                }
                 _state.value = UiState(loggedIn = true)
             } catch (e: Exception) {
                 _state.value = UiState(error = Res.string.could_not_login)
