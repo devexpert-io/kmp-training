@@ -18,6 +18,7 @@ import io.ktor.server.engine.ApplicationEngineFactory
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -55,7 +56,7 @@ private fun Scope.buildHttpClient(): HttpClient {
         }
     }.also {
         it.plugin(HttpSend).intercept { request ->
-            val token = userInfoStorage.getUserInfo()?.token
+            val token = userInfoStorage.userInfo.first()?.token
             if (token != null) {
                 request.headers["Authorization"] = "Bearer $token"
             }

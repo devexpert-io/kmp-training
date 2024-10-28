@@ -24,4 +24,5 @@
     <string name="note_cloned">Note cloned successfully</string>
     <string name="note_deleted">Note deleted successfully</string>
     <string name="could_not_login">Could not login. Please try again.</string>
+    <string name="avatar">Avatar</string>
 </resources>

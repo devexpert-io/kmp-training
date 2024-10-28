@@ -7,9 +7,10 @@ class AuthRepository(
     private val oAuthServer: OAuthServer,
     private val userInfoStorage: UserInfoStorage,
 ) {
-    suspend fun shouldInitiateOAuth(): Boolean {
-        return userInfoStorage.getUserInfo() == null
-    }
+
+    val userInfo = userInfoStorage.userInfo
+
+    suspend fun shouldInitiateOAuth(): Boolean = userInfoStorage.userInfo.first() == null
 
     fun initiateOAuth(): String {
         oAuthServer.start()

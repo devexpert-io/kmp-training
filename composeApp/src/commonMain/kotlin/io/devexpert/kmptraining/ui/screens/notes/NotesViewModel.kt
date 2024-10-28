@@ -2,13 +2,14 @@ package io.devexpert.kmptraining.ui.screens.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.devexpert.kmptraining.data.AuthRepository
 import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.domain.Note
+import io.devexpert.kmptraining.domain.UserInfo
 import io.devexpert.kmptraining.ui.domain.Action
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.note_cloned
 import kmptraining.composeapp.generated.resources.note_deleted
-import kmptraining.composeapp.generated.resources.notes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -18,13 +19,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
-class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
+class NotesViewModel(
+    private val repository: NotesRepository,
+    authRepository: AuthRepository
+) : ViewModel() {
 
     private val message = MutableStateFlow<StringResource?>(null)
 
     val state = repository.notes
         .map { notes -> UiState(notes = notes) }
         .combine(message) { state, message -> state.copy(message = message) }
+        .combine(authRepository.userInfo) { state, userInfo -> state.copy(userInfo = userInfo) }
         .catch { e -> emit(UiState(error = e.message)) }
         .stateIn(
             scope = viewModelScope,
@@ -39,6 +44,7 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
                     repository.cloneNote(note)
                     message.value = Res.string.note_cloned
                 }
+
                 Action.DELETE -> {
                     repository.deleteNote(note)
                     message.value = Res.string.note_deleted
@@ -55,6 +61,7 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
         val notes: List<Note> = emptyList(),
         val isLoading: Boolean = false,
         val error: String? = null,
-        val message: StringResource? = null
+        val message: StringResource? = null,
+        val userInfo: UserInfo? = null
     )
 }
