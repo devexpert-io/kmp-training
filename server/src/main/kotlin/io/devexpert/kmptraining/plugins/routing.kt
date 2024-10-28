@@ -132,7 +132,7 @@ private suspend fun ApplicationCall.handleOAuthCallback(httpClient: HttpClient) 
 
         val token = generateJwtToken(updatedUser.id.toString())
 
-        respondRedirect("http://localhost:3000/callback?token=$token")
+        respondRedirect("http://localhost:3000/callback?token=$token&name=${updatedUser.name}&picture=${updatedUser.pictureUrl}")
 
     } ?: respond(HttpStatusCode.Unauthorized, "OAuth authentication failed")
 }

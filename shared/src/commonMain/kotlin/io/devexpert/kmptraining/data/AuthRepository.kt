@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.first
 class AuthRepository(
     private val serverUrl: String,
     private val oAuthServer: OAuthServer,
-    private val tokenStorage: TokenStorage,
+    private val userInfoStorage: UserInfoStorage,
 ) {
     suspend fun shouldInitiateOAuth(): Boolean {
-        return tokenStorage.getToken().isNullOrEmpty()
+        return userInfoStorage.getUserInfo() == null
     }
 
     fun initiateOAuth(): String {
@@ -17,8 +17,8 @@ class AuthRepository(
     }
 
     suspend fun handleAuthCode() {
-        val token = oAuthServer.authCode.first()
-        tokenStorage.saveToken(token)
+        val userInfo = oAuthServer.userInfo.first()
+        userInfoStorage.saveUserInfo(userInfo)
     }
 
     fun stop() {

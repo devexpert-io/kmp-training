@@ -2,7 +2,7 @@ package io.devexpert.kmptraining
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import io.devexpert.kmptraining.data.Token
+import io.devexpert.kmptraining.domain.UserInfo
 import io.devexpert.kmptraining.sqldelight.Database
 import io.github.xxfast.kstore.KStore
 import io.github.xxfast.kstore.file.storeOf
@@ -27,12 +27,12 @@ actual val nativeModule: Module = module {
         }
     }
     single(named(Named.SERVER_URL)) { "http://0.0.0.0:8080" }
-    single<KStore<Token>> {
+    single<KStore<UserInfo>> {
         val filesDir = AppDirsFactory
             .getInstance()
             .getUserDataDir(PACKAGE_NAME, VERSION, ORGANISATION)
         val filesPath = Path(filesDir)
         with(SystemFileSystem) { if (!exists(filesPath)) createDirectories(filesPath) }
-        storeOf(Path("$filesDir/token.json"), "")
+        storeOf(Path("$filesDir/userInfo.json"), null)
     }
 }

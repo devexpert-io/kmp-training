@@ -1,5 +1,6 @@
 package io.devexpert.kmptraining.data
 
+import io.devexpert.kmptraining.domain.UserInfo
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.ApplicationEngineFactory
 import io.ktor.server.engine.embeddedServer
@@ -14,8 +15,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 class OAuthServer(
     applicationEngineFactory: ApplicationEngineFactory<*, *>
 ) {
-    private val _authCode = Channel<String>()
-    val authCode: Flow<String> = _authCode.receiveAsFlow()
+    private val _userInfo = Channel<UserInfo>()
+    val userInfo: Flow<UserInfo> = _userInfo.receiveAsFlow()
 
     private val server = embeddedServer(
         factory = applicationEngineFactory,
@@ -25,11 +26,14 @@ class OAuthServer(
         routing {
             get("/callback") {
                 val token = call.parameters["token"]
-                if (token != null) {
-                    _authCode.send(token)
+                val name = call.parameters["name"]
+                val picture = call.parameters["picture"]
+                
+                if (token != null && name != null && picture != null) {
+                    _userInfo.send(UserInfo(token, name, picture))
                     call.respondText("Authentication successful. You can close this window.")
                 } else {
-                    call.respond(HttpStatusCode.BadRequest, "Code not received")
+                    call.respond(HttpStatusCode.BadRequest, "Required parameters not received")
                 }
                 stop()
             }
@@ -42,6 +46,6 @@ class OAuthServer(
 
     fun stop() {
         server.stop(1000, 2000)
-        _authCode.close()
+        _userInfo.close()
     }
 }

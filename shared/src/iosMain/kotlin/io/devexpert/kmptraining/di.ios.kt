@@ -2,7 +2,7 @@ package io.devexpert.kmptraining
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
-import io.devexpert.kmptraining.data.Token
+import io.devexpert.kmptraining.domain.UserInfo
 import io.devexpert.kmptraining.sqldelight.Database
 import io.github.xxfast.kstore.KStore
 import io.github.xxfast.kstore.file.storeOf
@@ -20,7 +20,7 @@ import platform.Foundation.NSUserDomainMask
 actual val nativeModule: Module = module {
     single<SqlDriver> { NativeSqliteDriver(Database.Schema, "notes.db") }
     single(named(Named.SERVER_URL)) { "http://0.0.0.0:8080" }
-    single<KStore<Token>> {
+    single<KStore<UserInfo>> {
         val fileManager: NSFileManager = NSFileManager.defaultManager
         val documentsUrl: NSURL = fileManager.URLForDirectory(
             directory = NSDocumentDirectory,
@@ -29,6 +29,6 @@ actual val nativeModule: Module = module {
             inDomain = NSUserDomainMask,
             error = null
         )!!
-        storeOf(Path("${documentsUrl.path}/token.json"), "")
+        storeOf(Path("${documentsUrl.path}/userInfo.json"), null)
     }
 }

@@ -1,12 +1,12 @@
 package io.devexpert.kmptraining
 
 import io.devexpert.kmptraining.data.AuthRepository
-import io.devexpert.kmptraining.data.KStoreTokenStorage
+import io.devexpert.kmptraining.data.KStoreUserInfoStorage
 import io.devexpert.kmptraining.data.NotesLocalDataSource
 import io.devexpert.kmptraining.data.NotesRemoteDataSource
 import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.data.OAuthServer
-import io.devexpert.kmptraining.data.TokenStorage
+import io.devexpert.kmptraining.data.UserInfoStorage
 import io.devexpert.kmptraining.sqldelight.Database
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpSend
@@ -40,13 +40,13 @@ val sharedModule: Module = module {
     single { Database(get()).notesQueries }
     single { buildHttpClient() }
     single { AuthRepository(get(named(Named.SERVER_URL)), get(), get()) }
-    singleOf(::KStoreTokenStorage) bind TokenStorage::class
+    singleOf(::KStoreUserInfoStorage) bind UserInfoStorage::class
     singleOf(::OAuthServer)
     single<ApplicationEngineFactory<*, *>> { CIO }
 }
 
 private fun Scope.buildHttpClient(): HttpClient {
-    val tokenStorage: TokenStorage = get()
+    val userInfoStorage: UserInfoStorage = get()
     return HttpClient {
         install(ContentNegotiation) {
             json(Json {
@@ -55,7 +55,7 @@ private fun Scope.buildHttpClient(): HttpClient {
         }
     }.also {
         it.plugin(HttpSend).intercept { request ->
-            val token = tokenStorage.getToken()
+            val token = userInfoStorage.getUserInfo()?.token
             if (token != null) {
                 request.headers["Authorization"] = "Bearer $token"
             }
