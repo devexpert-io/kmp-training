@@ -1,26 +1,92 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop, Server.
+# KMP Training App
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+A comprehensive note-taking application built with Kotlin Multiplatform, demonstrating modern app development practices across Android, iOS, and Desktop platforms.
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## Contact
 
-* `/server` is for the Ktor server application.
+For questions, support, or training services, reach us at:
+[https://devexpert.io/contacto](https://devexpert.io/contacto)
 
-* `/shared` is for the code that will be shared between all targets in the project.
-  The most important subfolder is `commonMain`. If preferred, you can add code to the platform-specific folders here too.
+## Project Overview
+
+This project showcases a complete Kotlin Multiplatform application with the following features:
+- Google OAuth authentication
+- Note management (create, read, update, delete)
+- Cross-platform UI using Compose Multiplatform
+- Offline support with SQLDelight
+- REST API integration with Ktor
+
+## Architecture
+
+The project is structured into three main modules:
+
+### 1. composeApp
+Contains the UI implementation using Compose Multiplatform, including:
+- Screens (Login, Notes list, Note detail)
+- ViewModels
+- UI components
+- Theme and resources
+
+### 2. shared
+Contains the common business logic and data layer:
+- Domain models
+- Repositories
+- Data sources
+- DI configuration
+- Platform-specific implementations
+
+### 3. server
+A Ktor-based backend implementation providing:
+- REST API endpoints
+- Google OAuth integration
+- Database operations
+- JWT authentication
+
+## Main Technologies
+
+- **UI Framework**: Compose Multiplatform
+- **Dependency Injection**: Koin
+- **Local Storage**: SQLDelight
+- **Networking**: Ktor Client/Server
+- **Authentication**: Google OAuth + JWT
+- **Image Loading**: Coil
+- **State Management**: Kotlin Flow
+- **Build System**: Gradle with Version Catalogs
+
+## Setup
+
+1. Clone the repository
+2. Set up environment variables for Google OAuth:
+   ```
+   GOOGLE_CLIENT_ID=your_client_id
+   GOOGLE_CLIENT_SECRET=your_client_secret
+   JWT_SECRET=your_jwt_secret
+   ```
+3. Run the server:
+   ```
+   ./gradlew :server:run
+   ```
+4. Run the application:
+   - Android: Open in Android Studio and run
+   - iOS: Open `iosApp/iosApp.xcodeproj` and run
+   - Desktop: `./gradlew :composeApp:run`
+
+## Project Structure
+
+├── composeApp/ # Main UI module
+│ ├── commonMain/ # Cross-platform UI code
+│ ├── androidMain/ # Android-specific code
+│ ├── iosMain/ # iOS-specific code
+│ └── desktopMain/ # Desktop-specific code
+├── shared/ # Common business logic
+│ ├── commonMain/ # Cross-platform code
+│ ├── androidMain/ # Android-specific implementations
+│ ├── iosMain/ # iOS-specific implementations
+│ └── jvmMain/ # Desktop-specific implementations
+└── server/ # Backend implementation
 
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
+## License
 
-You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
+This project is part of DevExpert's Kotlin Multiplatform training materials.
