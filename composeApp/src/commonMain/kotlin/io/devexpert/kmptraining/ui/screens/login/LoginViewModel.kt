@@ -31,6 +31,7 @@ class LoginViewModel : ViewModel() {
 
     data class UiState(
         val loggedIn: Boolean = false,
-        val error: StringResource? = null
+        val error: StringResource? = null,
+        val loading: Boolean = false,
     )
 }

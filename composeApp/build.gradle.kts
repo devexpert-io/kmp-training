@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -10,6 +11,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.gradleBuildConfig)
 }
 
 kotlin {
@@ -75,6 +77,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(projects.shared)
             implementation(libs.koin.compose)
+            implementation(libs.kmpauth.google)
+            implementation(libs.kmpauth.firebase)
+            implementation(libs.kmpauth.uihelper)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -129,4 +134,13 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+buildConfig {
+    packageName("io.devexpert.kmptraining")
+
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").reader())
+
+    buildConfigField("GOOGLE_SERVER_ID", properties.getProperty("GOOGLE_SERVER_ID"))
 }

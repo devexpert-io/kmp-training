@@ -18,3 +18,7 @@ captures
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 /composeApp/app.db
+
+# You need to add your own GoogleService-Info.plist and google-services.json to the iosApp and composeApp folders respectively
+/iosApp/iosApp/GoogleService-Info.plist
+/composeApp/google-services.json
