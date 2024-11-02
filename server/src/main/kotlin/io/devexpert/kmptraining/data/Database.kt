@@ -23,7 +23,7 @@ object DatabaseSingleton {
         val database = Database.connect(createHikariDataSource())
 
         transaction(database) {
-            SchemaUtils.create(Notes)
+            SchemaUtils.create(Notes, Users)
         }
     }
 }

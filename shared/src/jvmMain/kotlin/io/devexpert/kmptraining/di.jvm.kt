@@ -17,5 +17,5 @@ actual val nativeModule: Module = module {
                 }
             }
     }
-    single(named(Named.SERVER_URL)) { "http://0.0.0.0:8080" }
+    single(named(Named.SERVER_URL)) { "http://0.0.0.0:$SERVER_PORT" }
 }

@@ -9,5 +9,5 @@ import org.koin.dsl.module
 
 actual val nativeModule: Module = module {
     single<SqlDriver> { AndroidSqliteDriver(Database.Schema, get(), "notes.db") }
-    single(named(Named.SERVER_URL)) { "http://10.0.2.2:8080" }
+    single(named(Named.SERVER_URL)) { "http://10.0.2.2:$SERVER_PORT" }
 }
