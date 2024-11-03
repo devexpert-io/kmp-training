@@ -1,8 +1,12 @@
 package io.devexpert.kmptraining.ui.screens.login
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mmk.kmpauth.google.GoogleButtonUiContainer
 import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
@@ -29,7 +34,8 @@ fun Login(
     val state by viewModel.state.collectAsStateWithLifecycle()
     Login(
         state = state,
-        onLoginClick = viewModel::loginClicked,
+        onLoginClick = viewModel::onLoginClick,
+        onSignIn = viewModel::onSignIn,
         onLoggedIn = onLoggedIn
     )
 }
@@ -37,7 +43,8 @@ fun Login(
 @Composable
 fun Login(
     state: LoginViewModel.UiState,
-    onLoginClick: (String, String) -> Unit,
+    onLoginClick: () -> Unit,
+    onSignIn: (String) -> Unit,
     onLoggedIn: () -> Unit
 ) {
     LaunchedEffect(state.loggedIn) {
@@ -53,24 +60,32 @@ fun Login(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            when {
-                state.loading -> LoadingIndicator()
-                state.error != null -> Text(stringResource(state.error))
-                else -> LoginButton()
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.wrapContentSize()
+            ) {
+                LoginButton(onLoginClick, onSignIn)
+                Spacer(modifier = Modifier.height(16.dp))
+                when {
+                    state.loading -> LoadingIndicator()
+                    state.error != null -> Text(stringResource(state.error))
+                }
             }
-
         }
     }
 }
 
 @Composable
-fun LoginButton() {
+fun LoginButton(
+    onButtonClick: () -> Unit,
+    onSignIn: (String) -> Unit
+) {
     GoogleButtonUiContainer(onGoogleSignInResult = { googleUser ->
-        println("GOOGLE USER = ${googleUser?.idToken}")
+        onSignIn(googleUser?.idToken ?: "")
     }) {
-        GoogleSignInButton(
-            //modifier = Modifier.fillMaxWidth().height(44.dp),
-            //fontSize = 19.sp
-        ) { this.onClick() }
+        GoogleSignInButton(onClick = {
+            onButtonClick()
+            this.onClick()
+        })
     }
 }

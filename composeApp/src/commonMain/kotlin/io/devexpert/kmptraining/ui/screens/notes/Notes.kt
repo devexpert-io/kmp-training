@@ -96,7 +96,11 @@ fun Notes(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         when {
-            state.isLoading -> LoadingIndicator(modifier = Modifier.padding(innerPadding))
+            state.isLoading -> LoadingIndicator(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            )
 
             state.error != null -> {
                 ErrorMessage(
