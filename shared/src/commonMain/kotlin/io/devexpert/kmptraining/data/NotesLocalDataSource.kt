@@ -1,39 +1,30 @@
 package io.devexpert.kmptraining.data
 
-import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToList
 import io.devexpert.kmptraining.domain.Note
-import io.devexpert.kmptraining.sqldelight.Notes
-import io.devexpert.kmptraining.sqldelight.NotesQueries
-import kotlinx.coroutines.CoroutineDispatcher
+import io.github.xxfast.kstore.KStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface NotesLocalDataSource {
     fun getAllNotes(): Flow<List<Note>>
     fun getNoteById(id: Int): Flow<Note?>
-    fun insertNote(note: Note)
-    fun deleteAllNotes()
+    suspend fun insertNote(note: Note)
+    suspend fun deleteAllNotes()
 }
 
-class NotesLocalDataSourceImpl(
-    private val queries: NotesQueries,
-    private val dispatcher: CoroutineDispatcher,
-) : NotesLocalDataSource {
-    override fun getAllNotes(): Flow<List<Note>> = queries.selectAll().asFlow().mapToList(dispatcher)
-        .map { notes -> notes.map { it.toNote() } }
+class NotesLocalDataSourceImpl(private val store: KStore<List<Note>>) : NotesLocalDataSource {
+    override fun getAllNotes(): Flow<List<Note>> =
+        store.updates.map { it ?: emptyList() }
 
     override fun getNoteById(id: Int): Flow<Note?> =
-        queries.selectById(id.toLong()).asFlow().mapToList(dispatcher)
-            .map { it.firstOrNull()?.toNote() }
+        store.updates.map { notes -> notes?.find { it.id == id } }
 
-    override fun insertNote(note: Note): Unit = queries.insert(note.id.toLong(), note.title, note.content)
+    override suspend fun insertNote(note: Note) {
+        val currentNotes = store.get() ?: emptyList()
+        store.set(currentNotes + note)
+    }
 
-    override fun deleteAllNotes(): Unit = queries.deleteAll()
+    override suspend fun deleteAllNotes() {
+        store.set(emptyList())
+    }
 }
-
-private fun Notes.toNote() = Note(
-    id = id.toInt(),
-    title = title,
-    content = content
-)

@@ -3,7 +3,6 @@ package io.devexpert.kmptraining.data
 import io.devexpert.kmptraining.domain.Note
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 
 class NotesRepository(
     private val localDataSource: NotesLocalDataSource,
@@ -16,7 +15,7 @@ class NotesRepository(
     private suspend fun refreshCache(): List<Note> {
         val remoteNotes = remoteDataSource.getNotes()
         localDataSource.deleteAllNotes()
-        remoteNotes.forEach(localDataSource::insertNote)
+        remoteNotes.forEach{ localDataSource.insertNote(it) }
         return remoteNotes
     }
 

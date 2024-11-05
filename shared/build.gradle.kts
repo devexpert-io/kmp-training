@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.sqldelight)
     alias(libs.plugins.mokkery)
 }
 
@@ -47,21 +46,17 @@ kotlin {
             implementation(libs.ktor.client.contentNegotiation)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.serialization.kotlin.json)
-            implementation(libs.sqldelight.runtime)
-            implementation(libs.sqldelight.coroutines.extensions)
             implementation(libs.koin.core)
             implementation(libs.kstore)
         }
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.sqldelight.android.driver)
             implementation(libs.kstore.file)
         }
 
         jvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.sqldelight.sqlite.driver)
             implementation(libs.kstore.file)
             implementation(libs.harawata.appdirs)
         }
@@ -72,7 +67,6 @@ kotlin {
 
         iosMain.dependencies {
             implementation(libs.ktor.client.ios)
-            implementation(libs.sqldelight.native.driver)
             implementation(libs.kstore.file)
         }
 
@@ -95,13 +89,5 @@ android {
     }
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-}
-
-sqldelight {
-    databases {
-        create("Database") {
-            packageName.set("io.devexpert.kmptraining.sqldelight")
-        }
     }
 }

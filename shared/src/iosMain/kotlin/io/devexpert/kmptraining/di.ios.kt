@@ -1,9 +1,7 @@
 package io.devexpert.kmptraining
 
-import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import io.devexpert.kmptraining.domain.Note
 import io.devexpert.kmptraining.domain.User
-import io.devexpert.kmptraining.sqldelight.Database
 import io.github.xxfast.kstore.KStore
 import io.github.xxfast.kstore.file.storeOf
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -18,10 +16,8 @@ import platform.Foundation.NSUserDomainMask
 
 @OptIn(ExperimentalForeignApi::class)
 actual val nativeModule: Module = module {
-    single<SqlDriver> { NativeSqliteDriver(Database.Schema, "notes.db") }
-    single(named(Named.SERVER_URL)) { "http://0.0.0.0:$SERVER_PORT" }
-    single<KStore<User>> {
-        val fileManager: NSFileManager = NSFileManager.defaultManager
+    single<KStore<User>>(named(Named.USER_STORE)) {
+        val fileManager = NSFileManager.defaultManager
         val documentsUrl: NSURL = fileManager.URLForDirectory(
             directory = NSDocumentDirectory,
             appropriateForURL = null,
@@ -29,6 +25,18 @@ actual val nativeModule: Module = module {
             inDomain = NSUserDomainMask,
             error = null
         )!!
-        storeOf<User>(Path("${documentsUrl.path}/token.json"), null)
+        storeOf(Path("${documentsUrl.path}/user.json"), null)
     }
+    single<KStore<List<Note>>>(named(Named.NOTES_STORE)) {
+        val fileManager = NSFileManager.defaultManager
+        val documentsUrl: NSURL = fileManager.URLForDirectory(
+            directory = NSDocumentDirectory,
+            appropriateForURL = null,
+            create = false,
+            inDomain = NSUserDomainMask,
+            error = null
+        )!!
+        storeOf(Path("${documentsUrl.path}/notes.json"), null)
+    }
+    single(named(Named.SERVER_URL)) { "http://0.0.0.0:$SERVER_PORT" }
 }
