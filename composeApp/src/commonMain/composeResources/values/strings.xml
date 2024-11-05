@@ -23,4 +23,5 @@
     <string name="save">Save</string>
     <string name="note_cloned">Note cloned successfully</string>
     <string name="note_deleted">Note deleted successfully</string>
+    <string name="avatar">Avatar</string>
 </resources>

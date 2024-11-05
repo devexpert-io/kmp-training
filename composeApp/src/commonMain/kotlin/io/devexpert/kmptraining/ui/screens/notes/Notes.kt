@@ -3,6 +3,8 @@ package io.devexpert.kmptraining.ui.screens.notes
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Add
@@ -25,13 +27,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
 import io.devexpert.kmptraining.domain.Note
+import io.devexpert.kmptraining.domain.User
 import io.devexpert.kmptraining.ui.common.ErrorMessage
 import io.devexpert.kmptraining.ui.common.LoadingIndicator
 import io.devexpert.kmptraining.ui.domain.Action
 import kmptraining.composeapp.generated.resources.Res
+import kmptraining.composeapp.generated.resources.avatar
 import kmptraining.composeapp.generated.resources.notes
 import kmptraining.composeapp.generated.resources.switch_to_grid_view
 import kmptraining.composeapp.generated.resources.switch_to_list_view
@@ -83,6 +93,7 @@ fun Notes(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             NotesTopAppBar(
+                user = state.user,
                 isGrid = isGrid,
                 onToggleView = { isGrid = !isGrid },
                 scrollBehavior = scrollBehavior
@@ -135,12 +146,13 @@ fun Notes(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesTopAppBar(
+    user: User?,
     isGrid: Boolean,
     onToggleView: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
     TopAppBar(
-        title = { Text(stringResource(Res.string.notes)) },
+        title = { Text(user?.name ?: stringResource(Res.string.notes)) },
         actions = {
             IconButton(onClick = onToggleView) {
                 Icon(
@@ -149,6 +161,21 @@ fun NotesTopAppBar(
                 )
             }
         },
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
+        navigationIcon = {
+            user?.pictureUrl?.let {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
+                        .data(it)
+                        .build(),
+                    contentDescription = stringResource(Res.string.avatar),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(40.dp)
+                        .clip(CircleShape),
+                )
+            }
+        }
     )
 }

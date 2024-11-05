@@ -15,6 +15,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -45,7 +46,7 @@ private fun buildHttpClient(userStorage: UserStorage): HttpClient = HttpClient {
     }
 }.also {
     it.plugin(HttpSend).intercept { request ->
-        userStorage.getUser()?.token?.let { token ->
+        userStorage.user.first()?.token?.let { token ->
             request.headers["Authorization"] = "Bearer $token"
         }
         execute(request)
