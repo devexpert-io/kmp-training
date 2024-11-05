@@ -70,6 +70,7 @@ kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.r
 
 kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
 kstore-file = { module = "io.github.xxfast:kstore-file", version.ref = "kstore" }
+kstore-storage = { module = "io.github.xxfast:kstore-storage", version.ref = "kstore" }
 harawata-appdirs = { module = "net.harawata:appdirs", version.ref = "harawata-appdirs" }
 
 google-api-client = { module = "com.google.api-client:google-api-client", version.ref = "google-api-client" }
