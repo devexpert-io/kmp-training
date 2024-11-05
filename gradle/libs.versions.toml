@@ -27,6 +27,9 @@ koin = "4.0.0"
 kmpauth = "2.2.0"
 buildconfig = "5.5.0"
 google-api-client = "2.7.0"
+kstore = "0.9.0"
+harawata-appdirs = "1.2.2"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -78,6 +81,10 @@ koin-compose = { module = "io.insert-koin:koin-compose-viewmodel-navigation", ve
 kmpauth-google = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauth" }
 kmpauth-firebase = { module = "io.github.mirzemehdi:kmpauth-firebase", version.ref = "kmpauth" }
 kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauth" }
+
+kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
+kstore-file = { module = "io.github.xxfast:kstore-file", version.ref = "kstore" }
+harawata-appdirs = { module = "net.harawata:appdirs", version.ref = "harawata-appdirs" }
 
 google-api-client = { module = "com.google.api-client:google-api-client", version.ref = "google-api-client" }
 

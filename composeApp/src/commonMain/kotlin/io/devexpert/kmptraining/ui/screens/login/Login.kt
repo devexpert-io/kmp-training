@@ -47,8 +47,8 @@ fun Login(
     onSignIn: (String) -> Unit,
     onLoggedIn: () -> Unit
 ) {
-    LaunchedEffect(state.loggedIn) {
-        if (state.loggedIn) {
+    LaunchedEffect(state.loginState) {
+        if (state.loginState == LoginState.LOGGED_IN) {
             onLoggedIn()
         }
     }
@@ -64,10 +64,14 @@ fun Login(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.wrapContentSize()
             ) {
-                LoginButton(onLoginClick, onSignIn)
+                LoginButton(
+                    loginState = state.loginState,
+                    onButtonClick = onLoginClick,
+                    onSignIn = onSignIn
+                )
                 Spacer(modifier = Modifier.height(16.dp))
                 when {
-                    state.loading -> LoadingIndicator()
+                    state.loginState == LoginState.LOGGING_IN -> LoadingIndicator(Modifier.wrapContentSize())
                     state.error != null -> Text(stringResource(state.error))
                 }
             }
@@ -77,15 +81,22 @@ fun Login(
 
 @Composable
 fun LoginButton(
+    loginState: LoginState,
     onButtonClick: () -> Unit,
     onSignIn: (String) -> Unit
 ) {
     GoogleButtonUiContainer(onGoogleSignInResult = { googleUser ->
         onSignIn(googleUser?.idToken ?: "")
     }) {
+        LaunchedEffect(loginState) {
+            if (loginState == LoginState.LOGGING_IN) {
+                onClick()
+            }
+        }
         GoogleSignInButton(onClick = {
-            onButtonClick()
-            this.onClick()
+            if (loginState == LoginState.NOT_STARTED) {
+                onButtonClick()
+            }
         })
     }
 }

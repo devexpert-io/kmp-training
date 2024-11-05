@@ -1,25 +1,27 @@
 package io.devexpert.kmptraining.data
 
 import io.devexpert.kmptraining.domain.User
+import io.github.xxfast.kstore.KStore
 
 interface UserStorage {
-    fun saveUser(user: User)
-    fun getUser(): User?
-    fun clearUser()
+    suspend fun saveUser(user: User)
+    suspend fun getUser(): User?
+    suspend fun clearUser()
 }
 
-class InMemoryUserStorage : UserStorage {
-    private var user: User? = null
+class KStoreUserStorage(
+    private val store: KStore<User>
+) : UserStorage {
 
-    override fun saveUser(user: User) {
-        this.user = user
+    override suspend fun saveUser(user: User) {
+        store.set(user)
     }
 
-    override fun getUser(): User? {
-        return user
+    override suspend fun getUser(): User? {
+        return store.get()
     }
 
-    override fun clearUser() {
-        user = null
+    override suspend fun clearUser() {
+        store.delete()
     }
 }

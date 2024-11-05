@@ -11,6 +11,10 @@ class AuthRepository(
     private val userStorage: UserStorage,
     private val httpClient: HttpClient
 ) {
+    suspend fun isUserValidated(): Boolean {
+        return userStorage.getUser() != null
+    }
+
     suspend fun validateToken(authorization: String) {
         val user = httpClient.post("$serverUrl/login") {
             header("Authorization", authorization)

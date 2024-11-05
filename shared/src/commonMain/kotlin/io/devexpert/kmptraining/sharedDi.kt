@@ -1,7 +1,7 @@
 package io.devexpert.kmptraining
 
 import io.devexpert.kmptraining.data.AuthRepository
-import io.devexpert.kmptraining.data.InMemoryUserStorage
+import io.devexpert.kmptraining.data.KStoreUserStorage
 import io.devexpert.kmptraining.data.NotesLocalDataSource
 import io.devexpert.kmptraining.data.NotesRemoteDataSource
 import io.devexpert.kmptraining.data.NotesRepository
@@ -36,7 +36,7 @@ val sharedModule: Module = module {
     single { Database(get()).notesQueries }
     single { buildHttpClient(get()) }
     single { AuthRepository(get(named(Named.SERVER_URL)), get(), get()) }
-    singleOf(::InMemoryUserStorage) bind UserStorage::class
+    singleOf(::KStoreUserStorage) bind UserStorage::class
 }
 
 private fun buildHttpClient(userStorage: UserStorage): HttpClient = HttpClient {
