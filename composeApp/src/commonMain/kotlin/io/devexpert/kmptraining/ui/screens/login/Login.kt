@@ -16,8 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mmk.kmpauth.google.GoogleButtonUiContainer
-import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import io.devexpert.kmptraining.ui.common.LoadingIndicator
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
@@ -80,23 +78,8 @@ fun Login(
 }
 
 @Composable
-fun LoginButton(
+expect fun LoginButton(
     loginState: LoginState,
     onButtonClick: () -> Unit,
     onSignIn: (String) -> Unit
-) {
-    GoogleButtonUiContainer(onGoogleSignInResult = { googleUser ->
-        onSignIn(googleUser?.idToken ?: "")
-    }) {
-        LaunchedEffect(loginState) {
-            if (loginState == LoginState.LOGGING_IN) {
-                onClick()
-            }
-        }
-        GoogleSignInButton(onClick = {
-            if (loginState == LoginState.NOT_STARTED) {
-                onButtonClick()
-            }
-        })
-    }
-}
+)
