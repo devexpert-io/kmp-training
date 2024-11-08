@@ -29,7 +29,8 @@ fun NotesList(
             NoteListItem(
                 note = note,
                 onAction = { action -> onAction(action, note) },
-                onClick = { onNoteClick(note) }
+                onClick = { onNoteClick(note) },
+                modifier = Modifier.animateItem()
             )
         }
     }
@@ -39,12 +40,13 @@ fun NotesList(
 fun NoteListItem(
     note: Note,
     onAction: (Action) -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     ListItem(
         headlineContent = { Text(text = note.title) },
         supportingContent = { Text(text = note.content) },
         trailingContent = { MoreActionsIconButton(onAction) },
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = modifier.clickable(onClick = onClick)
     )
 }

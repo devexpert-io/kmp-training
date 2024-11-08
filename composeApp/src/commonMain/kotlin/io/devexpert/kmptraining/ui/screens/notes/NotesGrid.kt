@@ -41,7 +41,7 @@ fun NotesGrid(
                 note = note,
                 onAction = { action -> onAction(action, note) },
                 onClick = { onNoteClick(note) },
-                modifier = Modifier.padding(4.dp)
+                modifier = Modifier.padding(4.dp).animateItem()
             )
         }
     }
