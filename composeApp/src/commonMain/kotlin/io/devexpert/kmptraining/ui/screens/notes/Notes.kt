@@ -93,7 +93,6 @@ fun Notes(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             NotesTopAppBar(
-                user = state.user,
                 isGrid = isGrid,
                 onToggleView = { isGrid = !isGrid },
                 scrollBehavior = scrollBehavior
@@ -146,10 +145,10 @@ fun Notes(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesTopAppBar(
-    user: User?,
     isGrid: Boolean,
     onToggleView: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+    user: User? = null,
 ) {
     TopAppBar(
         title = { Text(user?.name ?: stringResource(Res.string.notes)) },

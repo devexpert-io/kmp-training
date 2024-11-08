@@ -2,10 +2,8 @@ package io.devexpert.kmptraining.ui.screens.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.devexpert.kmptraining.data.AuthRepository
 import io.devexpert.kmptraining.data.NotesRepository
 import io.devexpert.kmptraining.domain.Note
-import io.devexpert.kmptraining.domain.User
 import io.devexpert.kmptraining.ui.domain.Action
 import kmptraining.composeapp.generated.resources.Res
 import kmptraining.composeapp.generated.resources.note_cloned
@@ -20,8 +18,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
 class NotesViewModel(
-    private val notesRepository: NotesRepository,
-    authRepository: AuthRepository
+    private val notesRepository: NotesRepository
 ) : ViewModel() {
 
     private val message = MutableStateFlow<StringResource?>(null)
@@ -29,7 +26,6 @@ class NotesViewModel(
     val state = notesRepository.notes
         .map { notes -> UiState(notes = notes) }
         .combine(message) { state, message -> state.copy(message = message) }
-        .combine(authRepository.user) { state, user -> state.copy(user = user) }
         .catch { e -> emit(UiState(error = e.message)) }
         .stateIn(
             scope = viewModelScope,
@@ -44,6 +40,7 @@ class NotesViewModel(
                     notesRepository.cloneNote(note)
                     message.value = Res.string.note_cloned
                 }
+
                 Action.DELETE -> {
                     notesRepository.deleteNote(note)
                     message.value = Res.string.note_deleted
@@ -60,7 +57,6 @@ class NotesViewModel(
         val notes: List<Note> = emptyList(),
         val isLoading: Boolean = false,
         val error: String? = null,
-        val message: StringResource? = null,
-        val user: User? = null
+        val message: StringResource? = null
     )
 }

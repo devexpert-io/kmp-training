@@ -5,8 +5,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import io.devexpert.kmptraining.ui.screens.login.Login
-import io.devexpert.kmptraining.ui.screens.login.LoginScreen
 import io.devexpert.kmptraining.ui.screens.notedetail.NoteDetail
 import io.devexpert.kmptraining.ui.screens.notedetail.NoteDetailScreen
 import io.devexpert.kmptraining.ui.screens.notes.Notes
@@ -23,16 +21,7 @@ fun App() {
     KoinContext {
         KmpTrainingTheme {
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = LoginScreen) {
-
-                composable<LoginScreen> {
-                    Login(onLoggedIn = {
-                        navController.navigate(NotesScreen) {
-                            popUpTo(LoginScreen) { inclusive = true }
-                        }
-                    }
-                    )
-                }
+            NavHost(navController = navController, startDestination = NotesScreen) {
 
                 composable<NotesScreen> {
                     Notes(

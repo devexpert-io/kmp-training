@@ -11,7 +11,6 @@ import io.devexpert.kmptraining.domain.User
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationCall
-import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
@@ -29,7 +28,10 @@ fun Application.configureRouting() {
         post("/login") {
             try {
                 val authorization = call.request.headers["Authorization"]
-                    ?: return@post call.respond(HttpStatusCode.Unauthorized, "No authorization header")
+                    ?: return@post call.respond(
+                        HttpStatusCode.Unauthorized,
+                        "No authorization header"
+                    )
 
                 call.respond(findUserInfo(authorization))
             } catch (e: Exception) {
@@ -37,65 +39,64 @@ fun Application.configureRouting() {
             }
         }
 
-        authenticate("auth-jwt") {
-            route("/notes") {
+        route("/notes") {
+            get {
+                call.withValidUser { userId ->
+                    val notes = dao.getAllNotes(userId)
+                    call.respond(notes)
+                }
+            }
+
+            post {
+                call.withValidUser { userId ->
+                    val note = call.receive<Note>()
+                    val addedNote = dao.addNote(note, userId)
+                    call.respond(HttpStatusCode.Created, addedNote)
+                }
+            }
+
+            put {
+                call.withValidUser {
+                    val note = call.receive<Note>()
+                    val success = dao.updateNote(note)
+                    if (success) {
+                        call.respond(HttpStatusCode.OK, note)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Note not found or update failed")
+                    }
+                }
+            }
+
+            route("/{id}") {
                 get {
-                    call.withValidUser { userId ->
-                        val notes = dao.getAllNotes(userId)
-                        call.respond(notes)
-                    }
-                }
-
-                post {
-                    call.withValidUser { userId ->
-                        val note = call.receive<Note>()
-                        val addedNote = dao.addNote(note, userId)
-                        call.respond(HttpStatusCode.Created, addedNote)
-                    }
-                }
-
-                put {
                     call.withValidUser {
-                        val note = call.receive<Note>()
-                        val success = dao.updateNote(note)
-                        if (success) {
-                            call.respond(HttpStatusCode.OK, note)
+                        val id = call.getIdParameter() ?: return@get
+                        val note = dao.getNoteById(id)
+                        if (note != null) {
+                            call.respond(note)
                         } else {
-                            call.respond(HttpStatusCode.NotFound, "Note not found or update failed")
+                            call.respond(HttpStatusCode.NotFound, "Note not found")
                         }
                     }
                 }
 
-                route("/{id}") {
-                    get {
-                        call.withValidUser {
-                            val id = call.getIdParameter() ?: return@get
-                            val note = dao.getNoteById(id)
-                            if (note != null) {
-                                call.respond(note)
-                            } else {
-                                call.respond(HttpStatusCode.NotFound, "Note not found")
-                            }
-                        }
-                    }
-
-                    delete {
-                        call.withValidUser {
-                            val id = call.getIdParameter() ?: return@delete
-                            val success = dao.deleteNoteById(id)
-                            if (success) {
-                                call.respond(HttpStatusCode.NoContent)
-                            } else {
-                                call.respond(
-                                    HttpStatusCode.NotFound,
-                                    "Note not found or delete failed"
-                                )
-                            }
+                delete {
+                    call.withValidUser {
+                        val id = call.getIdParameter() ?: return@delete
+                        val success = dao.deleteNoteById(id)
+                        if (success) {
+                            call.respond(HttpStatusCode.NoContent)
+                        } else {
+                            call.respond(
+                                HttpStatusCode.NotFound,
+                                "Note not found or delete failed"
+                            )
                         }
                     }
                 }
             }
         }
+
     }
 }
 
@@ -129,12 +130,7 @@ private suspend fun findUserInfo(idToken: String): User {
 }
 
 private suspend inline fun ApplicationCall.withValidUser(block: (Int) -> Unit) {
-    val userId = principal<JWTPrincipal>()?.payload?.getClaim("userId")?.asInt()
-    if (userId != null) {
-        block(userId)
-    } else {
-        respond(HttpStatusCode.Unauthorized)
-    }
+    block(1)
 }
 
 private suspend fun ApplicationCall.getIdParameter(): Int? {

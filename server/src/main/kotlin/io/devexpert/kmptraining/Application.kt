@@ -22,7 +22,6 @@ fun main() {
 fun Application.module() {
     DatabaseSingleton.init()
     configureSerialization()
-    configureAuthentication()
     configureRouting()
     configureCORS()
 }
