@@ -8,6 +8,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import io.devexpert.kmptraining.domain.Note
 import io.devexpert.kmptraining.ui.domain.Action
 
@@ -44,8 +45,20 @@ fun NoteListItem(
     modifier: Modifier = Modifier
 ) {
     ListItem(
-        headlineContent = { Text(text = note.title) },
-        supportingContent = { Text(text = note.content) },
+        headlineContent = {
+            Text(
+                text = note.title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        supportingContent = {
+            Text(
+                text = note.content,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
         trailingContent = { MoreActionsIconButton(onAction) },
         modifier = modifier.clickable(onClick = onClick)
     )

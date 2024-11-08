@@ -1,6 +1,7 @@
 package io.devexpert.kmptraining.ui.screens.notes
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -8,7 +9,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -35,6 +38,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
+import io.devexpert.kmptraining.LocalUiMode
+import io.devexpert.kmptraining.UiMode
 import io.devexpert.kmptraining.domain.Note
 import io.devexpert.kmptraining.domain.User
 import io.devexpert.kmptraining.ui.common.ErrorMessage
@@ -55,14 +60,16 @@ object NotesScreen
 @Composable
 fun Notes(
     viewModel: NotesViewModel = koinViewModel(),
-    onNoteClick: (Note) -> Unit
+    onNoteClick: (Note) -> Unit,
+    onUiModeChange: (UiMode) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Notes(
         state = state,
         onAction = viewModel::onAction,
         onNoteClick = onNoteClick,
-        onMessageRemoved = viewModel::messageShown
+        onMessageRemoved = viewModel::messageShown,
+        onUiModeChange = onUiModeChange
     )
 }
 
@@ -72,7 +79,8 @@ fun Notes(
     state: NotesViewModel.UiState,
     onAction: (Action, Note) -> Unit,
     onNoteClick: (Note) -> Unit,
-    onMessageRemoved: () -> Unit
+    onMessageRemoved: () -> Unit,
+    onUiModeChange: (UiMode) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -95,7 +103,8 @@ fun Notes(
             NotesTopAppBar(
                 isGrid = isGrid,
                 onToggleView = { isGrid = !isGrid },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                onUiModeChange = onUiModeChange
             )
         },
         floatingActionButton = {
@@ -149,10 +158,12 @@ fun NotesTopAppBar(
     onToggleView: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     user: User? = null,
+    onUiModeChange: (UiMode) -> Unit
 ) {
     TopAppBar(
         title = { Text(user?.name ?: stringResource(Res.string.notes)) },
         actions = {
+            UiModeAction(onUiModeChange)
             IconButton(onClick = onToggleView) {
                 Icon(
                     imageVector = if (isGrid) Icons.AutoMirrored.Default.ViewList else Icons.Default.GridView,
@@ -177,4 +188,25 @@ fun NotesTopAppBar(
             }
         }
     )
+}
+
+@Composable
+fun UiModeAction(onUiModeChange: (UiMode) -> Unit) {
+    val currentMode = LocalUiMode.current
+    val isDarkTheme = isSystemInDarkTheme()
+    val targetMode = when (currentMode) {
+        UiMode.System -> if (isDarkTheme) UiMode.Light else UiMode.Dark
+        UiMode.Light -> UiMode.Dark
+        UiMode.Dark -> UiMode.Light
+    }
+    IconButton(onClick = { onUiModeChange(targetMode) }) {
+        Icon(
+            imageVector = when (currentMode) {
+                UiMode.System -> if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode
+                UiMode.Light -> Icons.Default.DarkMode
+                UiMode.Dark -> Icons.Default.LightMode
+            },
+            contentDescription = "Switch theme mode"
+        )
+    }
 }
