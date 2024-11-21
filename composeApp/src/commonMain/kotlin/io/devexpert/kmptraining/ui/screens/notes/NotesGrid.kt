@@ -29,7 +29,7 @@ fun NotesGrid(
     modifier: Modifier = Modifier
 ) {
     LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(minSize = 150.dp),
+        columns = StaggeredGridCells.Adaptive(minSize = 190.dp),
         contentPadding = PaddingValues(8.dp),
         modifier = modifier
     ) {
