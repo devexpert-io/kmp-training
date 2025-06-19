@@ -73,18 +73,22 @@ A Ktor-based backend implementation providing:
 
 ## Project Structure
 
-├── composeApp/ # Main UI module
-│ ├── commonMain/ # Cross-platform UI code
-│ ├── androidMain/ # Android-specific code
-│ ├── iosMain/ # iOS-specific code
-│ └── desktopMain/ # Desktop-specific code
-├── shared/ # Common business logic
-│ ├── commonMain/ # Cross-platform code
-│ ├── androidMain/ # Android-specific implementations
-│ ├── iosMain/ # iOS-specific implementations
-│ └── jvmMain/ # Desktop-specific implementations
-└── server/ # Backend implementation
+```
 
+├── composeApp/                 # Main UI module
+│   ├── commonMain/             # Cross-platform UI code
+│   ├── androidMain/            # Android-specific code
+│   ├── iosMain/                # iOS-specific code
+│   └── desktopMain/            # Desktop-specific code
+├── shared/                     # Common business logic
+│   ├── commonMain/             # Cross-platform code
+│   ├── androidMain/            # Android-specific implementations
+│   ├── iosMain/                # iOS-specific implementations
+│   └── jvmMain/                # Desktop-specific implementations
+└── server/                     # Backend implementation
+
+
+```
 
 
 ## License
